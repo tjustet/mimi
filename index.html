@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -83,18 +83,19 @@
             border-radius: 15px;
             padding: 25px;
             margin-bottom: 30px;
-            min-height: 200px; /* Aumentado para acomodar más texto */
+            min-height: 200px;
             display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
+            align-items: flex-start; /* Cambiado para mejor alineación del texto */
+            justify-content: flex-start;
+            text-align: left; /* Cambiado a alineación izquierda para mejor legibilidad */
             font-size: 1.2rem;
             line-height: 1.6;
             color: #f8f8f2;
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            overflow-y: auto; /* Para permitir scroll si el texto es muy largo */
+            overflow-y: auto;
             max-height: 300px;
+            scroll-behavior: smooth; /* Para scroll suave */
         }
 
         .btn {
@@ -227,7 +228,7 @@
 
             .message-box {
                 padding: 15px;
-                font-size: 1rem;
+                font-size: 0.95rem; /* Ligeramente más pequeño */
                 min-height: 150px;
                 max-height: 250px;
             }
@@ -254,6 +255,8 @@
                 margin-bottom: 20px;
                 min-height: 120px;
                 max-height: 200px;
+                font-size: 0.9rem; /* Texto más pequeño para móviles */
+                line-height: 1.5;
             }
 
             .btn {
@@ -287,23 +290,18 @@
         // Mensaje dividido en partes para controlar la velocidad y pausas
         const messageParts = [
             {
-                text: "Mi amor hermosa te amo con toda mi vida mi alma y mi ser, sos lo mejor que me pasó nunca gracias por estar siempre aguantándome en todo momento, quiero estar con vos para siempre, casarnos y cumplir todas nuestras metas.\nGracias por siempre estar para mí y yo voy a estar para vos siempre mi amor.\n",
+                text: "Mi amor hermosa te amo con toda mi vida mi alma y mi ser, sos lo mejor que me pasó nunca gracias por estar siempre aguantándome en todo momento, quiero estar con vos para siempre casarnos y cumplir todas nuestras metas.\nGracias por siempre estar para mí y yo voy a estar para vos siempre mi amor.\n",
                 speed: 50, // Velocidad normal (rápida)
-                pauseAfter: 2000 // Pausa de 3 segundos después de esta parte
+                pauseAfter: 3000 // Pausa de 3 segundos después de esta parte
             },
             {
-                text: "Te amo, atte...",
+                text: "Te amo, atte:...",
                 speed: 150, // Velocidad más lenta
                 pauseAfter: 0 // Sin pausa después
             },
             {
-                text: " quien más? A quien más le vas a pedir algo así eh? Solo yo te lo puedo dar...",
+                text: " quien más? A quien más le vas a pedir algo así eh? Solo yo te lo puedo dar",
                 speed: 50, // Velocidad normal (rápida) de nuevo
-                pauseAfter: 0
-            },
-            {
-                text: "pero che",
-                speed: 115, // Velocidad normal (rápida) de nuevo
                 pauseAfter: 0
             }
         ];
@@ -354,6 +352,11 @@
         function startSlideshow() {
             // Cambiar imagen cada 4 segundos
             slideInterval = setInterval(nextSlide, 4000);
+        }
+        
+        // Función para hacer scroll al final del mensaje
+        function scrollToBottom() {
+            messageBox.scrollTop = messageBox.scrollHeight;
         }
         
         // Crear elementos decorativos
@@ -432,6 +435,9 @@
                     displayedText += currentPart.text[currentCharIndex];
                     messageBox.innerHTML = displayedText.replace(/\n/g, '<br>');
                     currentCharIndex++;
+                    
+                    // Hacer scroll al final después de cada carácter
+                    scrollToBottom();
                     
                     // Continuar con el siguiente carácter después de la velocidad especificada
                     setTimeout(animateText, currentPart.speed);
