@@ -44,8 +44,8 @@
                 // Enviar datos al Google Apps Script
                 const response = await fetch("https://script.google.com/macros/s/AKfycbwvQtcmyU7rpGWCVJ_X3ioPkwXmvcfaRcNUMleTfs_3dIn4d1N9rHLDDqDjewp9xRza/exec", {
                     method: "POST",
-                    mode: "no-cors",  // Evita el error de CORS, pero no recibirás respuesta
-
+/*                     mode: "no-cors",  // Evita el error de CORS, pero no recibirás respuesta
+ */
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(data)
                 });
