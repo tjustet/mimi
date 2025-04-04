@@ -74,11 +74,18 @@ document.addEventListener("DOMContentLoaded", function () {
             let hora = now.getHours().toString().padStart(2, "0") + ":" + now.getMinutes().toString().padStart(2, "0");
             let dia = now.toLocaleDateString();
             let ip = document.getElementById("ip").value;
+            let dni = document.getElementById("dni").value;
+
+            // Verifica si el DNI ya se registró
+            if (localStorage.getItem(`dni_${dni}`)) {
+                alert("🚫 Ya te has registrado con este DNI.");
+                return;
+            }
 
             let data = {
                 nombre: document.getElementById("nombre").value,
                 apellido: document.getElementById("apellido").value,
-                dni: document.getElementById("dni").value,
+                dni: dni,
                 turno: document.getElementById("turno").value,
                 hora: hora,
                 dia: dia,
@@ -88,6 +95,8 @@ document.addEventListener("DOMContentLoaded", function () {
             // Guarda la información en localStorage para bloquear el registro
             localStorage.setItem("registro", JSON.stringify(data));
             localStorage.setItem("ultimoRegistro", new Date().getTime());
+            localStorage.setItem(`dni_${dni}`, true);
+            localStorage.setItem(`ip_${ip}`, true);
 
             // Enviar datos al servidor
             fetch('https://script.google.com/macros/s/AKfycbzONezJ977qGhNhHK8SsFaMUqDMfXPF1RnOzLd00xgwBAS6ukSK5ThHw1PhJ8PgMB5W/exec', {
@@ -103,41 +112,78 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-function verificarModoIncognito() {
+// 🔒 Detectar Modo Incógnito
+async function verificarModoIncognito() {
+    let modoIncognito = false;
+
     try {
         localStorage.setItem("test", "1");
         localStorage.removeItem("test");
     } catch (e) {
+        modoIncognito = true;
+    }
+
+    try {
+        sessionStorage.setItem("test", "1");
+        sessionStorage.removeItem("test");
+    } catch (e) {
+        modoIncognito = true;
+    }
+
+    try {
+        let db = await indexedDB.open("test");
+        if (!db) modoIncognito = true;
+    } catch (e) {
+        modoIncognito = true;
+    }
+
+    try {
+        let quota = await navigator.storage.estimate();
+        if (quota.quota < 120000000) {  
+            modoIncognito = true;
+        }
+    } catch (e) {
+        modoIncognito = true;
+    }
+
+    if (modoIncognito) {
         document.body.innerHTML = "<h2>🚫 Modo incógnito detectado. No puedes registrarte.</h2>";
     }
 }
 
+// ⏳ Verifica si ya se registró recientemente
 function verificarBloqueo() {
     const ultimoRegistro = localStorage.getItem("ultimoRegistro");
     if (ultimoRegistro) {
         const ahora = new Date().getTime();
         const tiempoTranscurrido = ahora - parseInt(ultimoRegistro);
 
-        if (tiempoTranscurrido < 10 * 60 * 60 * 1000) { // 10 horas en milisegundos
+        if (tiempoTranscurrido < 10 * 60 * 60 * 1000) {
             const registroGuardado = JSON.parse(localStorage.getItem("registro"));
             mostrarMensajeRegistro(registroGuardado);
         }
     }
 }
 
+// 🌍 Obtiene la IP del usuario
 function obtenerIP() {
     fetch("https://api64.ipify.org?format=json")
         .then(response => response.json())
         .then(data => {
             document.getElementById("ip").value = data.ip;
+            // Si la IP ya se registró, bloquear acceso
+            if (localStorage.getItem(`ip_${data.ip}`)) {
+                document.body.innerHTML = "<h2>🚫 Esta IP ya ha registrado un turno.</h2>";
+            }
         });
 }
 
+// 📝 Muestra el mensaje de registro exitoso
 function mostrarMensajeRegistro(data) {
     document.body.innerHTML = `
         <div class='container'>
             <h2>${data.nombre} ${data.apellido}</h2>
-            <p>Registrado exitosamente en el Turno <strong>${data.turno}</strong> a la hora <strong>${data.hora}</strong> del día <strong>${data.dia}</strong></p>
+            <p>Registrado exitosamente en el Turno Rey <strong>${data.turno}</strong> a la hora <strong>${data.hora}</strong> del día <strong>${data.dia}</strong></p>
         </div>`;
 }
     </script>
