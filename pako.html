@@ -4,49 +4,121 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Turnos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
 </head>
 <body>
-    <h2>Registro de Turnos</h2>
-    <form id="registroForm">
-        <label for="nombre">Nombre:</label>
-        <input type="text" id="nombre" required><br>
-        
-        <label for="apellido">Apellido:</label>
-        <input type="text" id="apellido" required><br>
-        
-        <label for="dni">DNI:</label>
-        <input type="text" id="dni" required><br>
-        
-        <label for="turno">Turno:</label>
-        <select id="turno" required>
-            <option value="Mañana">Mañana</option>
-            <option value="Tarde">Tarde</option>
-        </select><br>
-        
-        <button type="submit">Registrar</button>
-    </form>
+    <div class="container">
+        <h2>Registro de Turnos</h2>
+        <form id="registroForm">
+            <input type="text" id="nombre" placeholder="Nombre" required>
+            <input type="text" id="apellido" placeholder="Apellido" required>
+            <input type="text" id="dni" placeholder="DNI" required>
+            <select id="turno" required>
+                <option value="Mañana">Mañana</option>
+                <option value="Tarde">Tarde</option>
+            </select>
+            <button type="submit">Registrar</button>
+        </form>
+    </div>
     
     <script>
-        document.getElementById('registroForm').addEventListener('submit', function(event) {
+document.addEventListener("DOMContentLoaded", function () {
+    verificarBloqueo(); // Verifica si ya está registrado
+
+    if (!localStorage.getItem("registro")) {
+        document.getElementById("registroForm").addEventListener("submit", function (event) {
             event.preventDefault();
-            
+
+            let now = new Date();
+            let hora = now.getHours().toString().padStart(2, "0") + ":" + now.getMinutes().toString().padStart(2, "0");
+            let dia = now.toLocaleDateString();
+
             let data = {
-                nombre: document.getElementById('nombre').value,
-                apellido: document.getElementById('apellido').value,
-                dni: document.getElementById('dni').value,
-                turno: document.getElementById('turno').value
+                nombre: document.getElementById("nombre").value,
+                apellido: document.getElementById("apellido").value,
+                dni: document.getElementById("dni").value,
+                turno: document.getElementById("turno").value,
+                hora: hora,
+                dia: dia
             };
-            
+
+            // Guarda la información en localStorage para bloquear el registro
+            localStorage.setItem("registro", JSON.stringify(data));
+            localStorage.setItem("ultimoRegistro", new Date().getTime()); // Guarda la hora del registro
+
+            // Enviar datos al servidor (pero no esperamos respuesta para bloquear la página)
             fetch('https://script.google.com/macros/s/AKfycbz9Y2VDeaZvK-0EapqKOm0PKTAptpfiqhMz1xsMGckGqkRHWwOF497DdzVtBSobTzGV/exec', {
                 method: 'POST',
                 mode: 'no-cors',
                 body: JSON.stringify(data),
                 headers: { 'Content-Type': 'application/json' }
-            })
-            .then(response => response.json())
-            .then(data => alert(data.mensaje))
-            .catch(error => console.error('Error:', error));
+            }).catch(error => console.error("Error en la solicitud:", error));
+
+            // Bloquea la página inmediatamente
+            mostrarMensajeRegistro(data);
         });
+    }
+});
+
+function verificarBloqueo() {
+    const ultimoRegistro = localStorage.getItem("ultimoRegistro");
+    if (ultimoRegistro) {
+        const ahora = new Date().getTime();
+        const tiempoTranscurrido = ahora - parseInt(ultimoRegistro);
+
+        if (tiempoTranscurrido < 20 * 60 * 60 * 1000) { // 20 horas en milisegundos
+            const registroGuardado = JSON.parse(localStorage.getItem("registro"));
+            mostrarMensajeRegistro(registroGuardado);
+        }
+    }
+}
+
+function mostrarMensajeRegistro(data) {
+    document.body.innerHTML = `
+        <div class='container'>
+            <h2>${data.nombre} ${data.apellido}</h2>
+            <p>Registrado exitosamente en el Turno <strong>${data.turno}</strong> a la hora <strong>${data.hora}</strong> del día <strong>${data.dia}</strong></p>
+        </div>`;
+}
+
     </script>
 </body>
 </html>
