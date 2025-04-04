@@ -50,18 +50,21 @@
         <form id="registroForm">
             <input type="text" id="nombre" placeholder="Nombre" required>
             <input type="text" id="apellido" placeholder="Apellido" required>
-            <input type="text" id="dni" placeholder="DNI" required>
+            <input type="number" id="dni" placeholder="DNI" required>
             <select id="turno" required>
                 <option value="Mañana">Mañana</option>
                 <option value="Tarde">Tarde</option>
             </select>
+            <input type="hidden" id="ip">
             <button type="submit">Registrar</button>
         </form>
     </div>
-    
+
     <script>
 document.addEventListener("DOMContentLoaded", function () {
-    verificarBloqueo(); // Verifica si ya está registrado
+    verificarModoIncognito();
+    verificarBloqueo();
+    obtenerIP();
 
     if (!localStorage.getItem("registro")) {
         document.getElementById("registroForm").addEventListener("submit", function (event) {
@@ -70,6 +73,7 @@ document.addEventListener("DOMContentLoaded", function () {
             let now = new Date();
             let hora = now.getHours().toString().padStart(2, "0") + ":" + now.getMinutes().toString().padStart(2, "0");
             let dia = now.toLocaleDateString();
+            let ip = document.getElementById("ip").value;
 
             let data = {
                 nombre: document.getElementById("nombre").value,
@@ -77,15 +81,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 dni: document.getElementById("dni").value,
                 turno: document.getElementById("turno").value,
                 hora: hora,
-                dia: dia
+                dia: dia,
+                ip: ip
             };
 
             // Guarda la información en localStorage para bloquear el registro
             localStorage.setItem("registro", JSON.stringify(data));
-            localStorage.setItem("ultimoRegistro", new Date().getTime()); // Guarda la hora del registro
+            localStorage.setItem("ultimoRegistro", new Date().getTime());
 
-            // Enviar datos al servidor (pero no esperamos respuesta para bloquear la página)
-            fetch('https://script.google.com/macros/s/AKfycby4Elzy7OOk1rS_YkvpkVhxMBx_Q9FLR08OwhR7oNUO1TTOGMUJezJ2fhOsa7RRFIWT/exec', {
+            // Enviar datos al servidor
+            fetch('https://script.google.com/macros/s/AKfycbzONezJ977qGhNhHK8SsFaMUqDMfXPF1RnOzLd00xgwBAS6ukSK5ThHw1PhJ8PgMB5W/exec', {
                 method: 'POST',
                 mode: 'no-cors',
                 body: JSON.stringify(data),
@@ -98,17 +103,34 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
+function verificarModoIncognito() {
+    try {
+        localStorage.setItem("test", "1");
+        localStorage.removeItem("test");
+    } catch (e) {
+        document.body.innerHTML = "<h2>🚫 Modo incógnito detectado. No puedes registrarte.</h2>";
+    }
+}
+
 function verificarBloqueo() {
     const ultimoRegistro = localStorage.getItem("ultimoRegistro");
     if (ultimoRegistro) {
         const ahora = new Date().getTime();
         const tiempoTranscurrido = ahora - parseInt(ultimoRegistro);
 
-        if (tiempoTranscurrido < 10 * 60 * 60 * 1000) {
+        if (tiempoTranscurrido < 10 * 60 * 60 * 1000) { // 10 horas en milisegundos
             const registroGuardado = JSON.parse(localStorage.getItem("registro"));
             mostrarMensajeRegistro(registroGuardado);
         }
     }
+}
+
+function obtenerIP() {
+    fetch("https://api64.ipify.org?format=json")
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById("ip").value = data.ip;
+        });
 }
 
 function mostrarMensajeRegistro(data) {
@@ -118,7 +140,6 @@ function mostrarMensajeRegistro(data) {
             <p>Registrado exitosamente en el Turno <strong>${data.turno}</strong> a la hora <strong>${data.hora}</strong> del día <strong>${data.dia}</strong></p>
         </div>`;
 }
-
     </script>
 </body>
 </html>
