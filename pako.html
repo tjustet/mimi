@@ -1,191 +1,171 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Turnos</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-        }
-        input, select, button {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        button {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #218838;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro de Turnos</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    button {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Registro de Turnos</h2>
-        <form id="registroForm">
-            <input type="text" id="nombre" placeholder="Nombre" required>
-            <input type="text" id="apellido" placeholder="Apellido" required>
-            <input type="number" id="dni" placeholder="DNI" required>
-            <select id="turno" required>
-                <option value="Mañana">Mañana</option>
-                <option value="Tarde">Tarde</option>
-            </select>
-            <input type="hidden" id="ip">
-            <button type="submit">Registrar</button>
-        </form>
-    </div>
+  <div class="container" id="registroContainer">
+    <h2>Registro de Turnos</h2>
+    <form id="registroForm">
+      <input type="text" id="nombre" placeholder="Nombre" required>
+      <input type="text" id="apellido" placeholder="Apellido" required>
+      <input type="number" id="dni" placeholder="DNI" required>
+      <select id="turno" required>
+        <option value="Mañana">Mañana</option>
+        <option value="Tarde">Tarde</option>
+      </select>
+      <button type="submit">Registrar</button>
+    </form>
+  </div>
 
-    <script>
-document.addEventListener("DOMContentLoaded", function () {
-    verificarModoIncognito();
-    verificarBloqueo();
-    obtenerIP();
+  <script>
+    const UBICACION_PERMITIDA = {
+      lat: -34.576139, // por ejemplo Buenos Aires
+      lng: -58.428013,
+      radioMetros: 500 // 500 MT
+    };
 
-    if (!localStorage.getItem("registro")) {
-        document.getElementById("registroForm").addEventListener("submit", function (event) {
-            event.preventDefault();
+    document.addEventListener("DOMContentLoaded", function () {
+      verificarRegistroPrevio();
 
-            let now = new Date();
-            let hora = now.getHours().toString().padStart(2, "0") + ":" + now.getMinutes().toString().padStart(2, "0");
-            let dia = now.toLocaleDateString();
-            let ip = document.getElementById("ip").value;
-            let dni = document.getElementById("dni").value;
+      document.getElementById("registroForm").addEventListener("submit", function (event) {
+        event.preventDefault();
 
-            // Verifica si el DNI ya se registró
-            if (localStorage.getItem(`dni_${dni}`)) {
-                alert("🚫 Ya te has registrado con este DNI.");
-                return;
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const distancia = calcularDistancia(
+              position.coords.latitude,
+              position.coords.longitude,
+              UBICACION_PERMITIDA.lat,
+              UBICACION_PERMITIDA.lng
+            );
+
+            if (distancia > UBICACION_PERMITIDA.radioMetros) {
+              alert("🚫 Solo puedes registrarte desde una ubicación permitida.");
+              return;
             }
 
-            let data = {
-                nombre: document.getElementById("nombre").value,
-                apellido: document.getElementById("apellido").value,
-                dni: dni,
-                turno: document.getElementById("turno").value,
-                hora: hora,
-                dia: dia,
-                ip: ip
-            };
+            procesarRegistro(); // Si está dentro del área permitida, continúa
+          },
+          (error) => {
+            alert("🚫 No se pudo obtener tu ubicación. Activa la ubicación en tu dispositivo.");
+          }
+        );
+      });
+    });
 
-            // Guarda la información en localStorage para bloquear el registro
-            localStorage.setItem("registro", JSON.stringify(data));
-            localStorage.setItem("ultimoRegistro", new Date().getTime());
-            localStorage.setItem(`dni_${dni}`, true);
-            localStorage.setItem(`ip_${ip}`, true);
+    function procesarRegistro() {
+      let now = new Date();
+      let hora = now.getHours().toString().padStart(2, "0") + ":" + now.getMinutes().toString().padStart(2, "0");
+      let dia = now.toLocaleDateString();
 
-            // Enviar datos al servidor
-            fetch('https://script.google.com/macros/s/AKfycbzONezJ977qGhNhHK8SsFaMUqDMfXPF1RnOzLd00xgwBAS6ukSK5ThHw1PhJ8PgMB5W/exec', {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify(data),
-                headers: { 'Content-Type': 'application/json' }
-            }).catch(error => console.error("Error en la solicitud:", error));
+      let data = {
+        nombre: document.getElementById("nombre").value,
+        apellido: document.getElementById("apellido").value,
+        dni: document.getElementById("dni").value,
+        turno: document.getElementById("turno").value,
+        hora: hora,
+        dia: dia,
+        timestamp: now.getTime()
+      };
 
-            // Bloquea la página inmediatamente
-            mostrarMensajeRegistro(data);
-        });
-    }
-});
+      localStorage.setItem("registro", JSON.stringify(data));
 
-// 🔒 Detectar Modo Incógnito
-async function verificarModoIncognito() {
-    let modoIncognito = false;
+      fetch('https://script.google.com/macros/s/AKfycbz4ynRNKHizc_aETRrZgVMpgtmQ7Z1ylqtRMqyJGbkOcSWL4KzJi91ZHDqgvjWutZZ1/exec', {
+        method: 'POST',
+        mode: 'no-cors',
+        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' }
+      }).catch(error => console.error("Error en la solicitud:", error));
 
-    try {
-        localStorage.setItem("test", "1");
-        localStorage.removeItem("test");
-    } catch (e) {
-        modoIncognito = true;
+      mostrarMensajeRegistro(data);
     }
 
-    try {
-        sessionStorage.setItem("test", "1");
-        sessionStorage.removeItem("test");
-    } catch (e) {
-        modoIncognito = true;
-    }
-
-    try {
-        let db = await indexedDB.open("test");
-        if (!db) modoIncognito = true;
-    } catch (e) {
-        modoIncognito = true;
-    }
-
-    try {
-        let quota = await navigator.storage.estimate();
-        if (quota.quota < 120000000) {  
-            modoIncognito = true;
-        }
-    } catch (e) {
-        modoIncognito = true;
-    }
-
-    if (modoIncognito) {
-        document.body.innerHTML = "<h2>🚫 Modo incógnito detectado. No puedes registrarte.</h2>";
-    }
-}
-
-// ⏳ Verifica si ya se registró recientemente
-function verificarBloqueo() {
-    const ultimoRegistro = localStorage.getItem("ultimoRegistro");
-    if (ultimoRegistro) {
+    function verificarRegistroPrevio() {
+      const registroGuardado = localStorage.getItem("registro");
+      if (registroGuardado) {
+        const data = JSON.parse(registroGuardado);
         const ahora = new Date().getTime();
-        const tiempoTranscurrido = ahora - parseInt(ultimoRegistro);
+        const tiempoTranscurrido = ahora - data.timestamp;
 
         if (tiempoTranscurrido < 10 * 60 * 60 * 1000) {
-            const registroGuardado = JSON.parse(localStorage.getItem("registro"));
-            mostrarMensajeRegistro(registroGuardado);
+          mostrarMensajeRegistro(data);
+        } else {
+          localStorage.removeItem("registro");
         }
+      }
     }
-}
 
-// 🌍 Obtiene la IP del usuario
-function obtenerIP() {
-    fetch("https://api64.ipify.org?format=json")
-        .then(response => response.json())
-        .then(data => {
-            document.getElementById("ip").value = data.ip;
-            // Si la IP ya se registró, bloquear acceso
-            if (localStorage.getItem(`ip_${data.ip}`)) {
-                document.body.innerHTML = "<h2>🚫 Esta IP ya ha registrado un turno.</h2>";
-            }
-        });
-}
+    function mostrarMensajeRegistro(data) {
+      document.getElementById("registroContainer").innerHTML = `
+        <h2>${data.nombre} ${data.apellido}</h2>
+        <p>Registrado exitosamente en el Turno <strong>${data.turno}</strong> a la hora <strong>${data.hora}</strong> del día <strong>${data.dia}</strong></p>
+      `;
+    }
 
-// 📝 Muestra el mensaje de registro exitoso
-function mostrarMensajeRegistro(data) {
-    document.body.innerHTML = `
-        <div class='container'>
-            <h2>${data.nombre} ${data.apellido}</h2>
-            <p>Registrado exitosamente en el Turno Rey <strong>${data.turno}</strong> a la hora <strong>${data.hora}</strong> del día <strong>${data.dia}</strong></p>
-        </div>`;
-}
-    </script>
+    // 📍 Cálculo de distancia entre dos coordenadas usando la fórmula Haversine
+    function calcularDistancia(lat1, lon1, lat2, lon2) {
+      const R = 6371000; // radio de la Tierra en metros
+      const dLat = toRad(lat2 - lat1);
+      const dLon = toRad(lon2 - lon1);
+      const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
+    }
+
+    function toRad(value) {
+      return value * Math.PI / 180;
+    }
+
+    window.onload = function () {
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      if (!isMobile) {
+        document.body.innerHTML = "<h2>Esta página solo está disponible para dispositivos móviles.</h2>";
+      }
+    };
+  </script>
 </body>
 </html>
