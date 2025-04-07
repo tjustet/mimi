@@ -46,7 +46,7 @@
 </head>
 <body>
   <div class="container" id="registroContainer">
-    <h2>Registro de TurnosS</h2>
+    <h2>Registro de Turnos</h2>
     <form id="registroForm">
       <input type="text" id="nombre" placeholder="Nombre" required>
       <input type="text" id="apellido" placeholder="Apellido" required>
@@ -58,6 +58,7 @@
       <button type="submit">Registrar</button>
     </form>
   </div>
+  <div id="mensajeUbicacion" style="margin-bottom: 10px; font-weight: bold;"></div>
 
   <script>
     const UBICACION_PERMITIDA = {
@@ -66,106 +67,120 @@
       radioMetros: 500 // 500 MT
     };
 
-    document.addEventListener("DOMContentLoaded", function () {
-      verificarRegistroPrevio();
+    let dentroDeZona = false;
 
-      document.getElementById("registroForm").addEventListener("submit", function (event) {
-        event.preventDefault();
+window.onload = function () {
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  if (!isMobile) {
+    document.body.innerHTML = "<h2>Esta página solo está disponible para dispositivos móviles.</h2>";
+    return;
+  }
 
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const distancia = calcularDistancia(
-              position.coords.latitude,
-              position.coords.longitude,
-              UBICACION_PERMITIDA.lat,
-              UBICACION_PERMITIDA.lng
-            );
+  // Verificar ubicación apenas carga la página
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const distancia = calcularDistancia(
+        position.coords.latitude,
+        position.coords.longitude,
+        UBICACION_PERMITIDA.lat,
+        UBICACION_PERMITIDA.lng
+      );
 
-            if (distancia > UBICACION_PERMITIDA.radioMetros) {
-              alert("🚫 Solo puedes registrarte desde una ubicación permitida.");
-              return;
-            }
+      if (distancia <= UBICACION_PERMITIDA.radioMetros) {
+        dentroDeZona = true;
+        document.getElementById("mensajeUbicacion").innerHTML = "✅ Estás dentro de la zona permitida para registrarte.";
+        document.querySelector("button[type='submit']").disabled = false;
+      } else {
+        dentroDeZona = false;
+        document.getElementById("mensajeUbicacion").innerHTML = "❌ Estás fuera de la zona permitida. No podrás registrarte.";
+        document.querySelector("button[type='submit']").disabled = true;
+      }
+    },
+    (error) => {
+      document.getElementById("mensajeUbicacion").innerHTML = "⚠️ No se pudo obtener tu ubicación. Activa el GPS.";
+      document.querySelector("button[type='submit']").disabled = true;
+    }
+  );
 
-            procesarRegistro(); // Si está dentro del área permitida, continúa
-          },
-          (error) => {
-            alert("🚫 No se pudo obtener tu ubicación. Activa la ubicación en tu dispositivo.");
-          }
-        );
-      });
-    });
+  verificarRegistroPrevio();
+};
 
-    function procesarRegistro() {
-      let now = new Date();
-      let hora = now.getHours().toString().padStart(2, "0") + ":" + now.getMinutes().toString().padStart(2, "0");
-      let dia = now.toLocaleDateString();
+document.addEventListener("DOMContentLoaded", function () {
+  document.getElementById("registroForm").addEventListener("submit", function (event) {
+    event.preventDefault();
 
-      let data = {
-        nombre: document.getElementById("nombre").value,
-        apellido: document.getElementById("apellido").value,
-        dni: document.getElementById("dni").value,
-        turno: document.getElementById("turno").value,
-        hora: hora,
-        dia: dia,
-        timestamp: now.getTime()
-      };
+    if (!dentroDeZona) {
+      alert("🚫 No estás en la ubicación permitida para registrarte.");
+      return;
+    }
 
-      localStorage.setItem("registro", JSON.stringify(data));
+    procesarRegistro();
+  });
+});
 
-      fetch('https://script.google.com/macros/s/AKfycbz4ynRNKHizc_aETRrZgVMpgtmQ7Z1ylqtRMqyJGbkOcSWL4KzJi91ZHDqgvjWutZZ1/exec', {
-        method: 'POST',
-        mode: 'no-cors',
-        body: JSON.stringify(data),
-        headers: { 'Content-Type': 'application/json' }
-      }).catch(error => console.error("Error en la solicitud:", error));
+function procesarRegistro() {
+  let now = new Date();
+  let hora = now.getHours().toString().padStart(2, "0") + ":" + now.getMinutes().toString().padStart(2, "0");
+  let dia = now.toLocaleDateString();
 
+  let data = {
+    nombre: document.getElementById("nombre").value,
+    apellido: document.getElementById("apellido").value,
+    dni: document.getElementById("dni").value,
+    turno: document.getElementById("turno").value,
+    hora: hora,
+    dia: dia,
+    timestamp: now.getTime()
+  };
+
+  localStorage.setItem("registro", JSON.stringify(data));
+
+  fetch('https://script.google.com/macros/s/AKfycbz4ynRNKHizc_aETRrZgVMpgtmQ7Z1ylqtRMqyJGbkOcSWL4KzJi91ZHDqgvjWutZZ1/exec', {
+    method: 'POST',
+    mode: 'no-cors',
+    body: JSON.stringify(data),
+    headers: { 'Content-Type': 'application/json' }
+  }).catch(error => console.error("Error en la solicitud:", error));
+
+  mostrarMensajeRegistro(data);
+}
+
+function verificarRegistroPrevio() {
+  const registroGuardado = localStorage.getItem("registro");
+  if (registroGuardado) {
+    const data = JSON.parse(registroGuardado);
+    const ahora = new Date().getTime();
+    const tiempoTranscurrido = ahora - data.timestamp;
+
+    if (tiempoTranscurrido < 10 * 60 * 60 * 1000) {
       mostrarMensajeRegistro(data);
+    } else {
+      localStorage.removeItem("registro");
     }
+  }
+}
 
-    function verificarRegistroPrevio() {
-      const registroGuardado = localStorage.getItem("registro");
-      if (registroGuardado) {
-        const data = JSON.parse(registroGuardado);
-        const ahora = new Date().getTime();
-        const tiempoTranscurrido = ahora - data.timestamp;
+function mostrarMensajeRegistro(data) {
+  document.getElementById("registroContainer").innerHTML = `
+    <h2>${data.nombre} ${data.apellido}</h2>
+    <p>Registrado exitosamente en el Turno <strong>${data.turno}</strong> a la hora <strong>${data.hora}</strong> del día <strong>${data.dia}</strong></p>
+  `;
+}
 
-        if (tiempoTranscurrido < 10 * 60 * 60 * 1000) {
-          mostrarMensajeRegistro(data);
-        } else {
-          localStorage.removeItem("registro");
-        }
-      }
-    }
+function calcularDistancia(lat1, lon1, lat2, lon2) {
+  const R = 6371000;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
 
-    function mostrarMensajeRegistro(data) {
-      document.getElementById("registroContainer").innerHTML = `
-        <h2>${data.nombre} ${data.apellido}</h2>
-        <p>Registrado exitosamente en el Turno <strong>${data.turno}</strong> a la hora <strong>${data.hora}</strong> del día <strong>${data.dia}</strong></p>
-      `;
-    }
-
-    // 📍 Cálculo de distancia entre dos coordenadas usando la fórmula Haversine
-    function calcularDistancia(lat1, lon1, lat2, lon2) {
-      const R = 6371000; // radio de la Tierra en metros
-      const dLat = toRad(lat2 - lat1);
-      const dLon = toRad(lon2 - lon1);
-      const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-                Math.sin(dLon / 2) * Math.sin(dLon / 2);
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      return R * c;
-    }
-
-    function toRad(value) {
-      return value * Math.PI / 180;
-    }
-
-    window.onload = function () {
-      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-      if (!isMobile) {
-        document.body.innerHTML = "<h2>Esta página solo está disponible para dispositivos móviles.</h2>";
-      }
-    };
-  </script>
+function toRad(value) {
+  return value * Math.PI / 180;
+}
+</script>
 </body>
 </html>
