@@ -46,7 +46,7 @@
 </head>
 <body>
   <div class="container" id="registroContainer">
-    <h2>Registro de Turnos</h2>
+    <h2>Registro de TurnosS</h2>
     <form id="registroForm">
       <input type="text" id="nombre" placeholder="Nombre" required>
       <input type="text" id="apellido" placeholder="Apellido" required>
@@ -122,6 +122,7 @@ function procesarRegistro() {
   let now = new Date();
   let hora = now.getHours().toString().padStart(2, "0") + ":" + now.getMinutes().toString().padStart(2, "0");
   let dia = now.toLocaleDateString();
+  document.getElementById("mensajeUbicacion").style.display = "none";
 
   let data = {
     nombre: document.getElementById("nombre").value,
@@ -181,6 +182,37 @@ function calcularDistancia(lat1, lon1, lat2, lon2) {
 function toRad(value) {
   return value * Math.PI / 180;
 }
+
+async function detectarModoIncognito() {
+    let esIncognito = false;
+
+    try {
+        // Test de disponibilidad de almacenamiento
+        const { quota } = await navigator.storage.estimate();
+        if (quota < 120000000) esIncognito = true; // Modo incógnito tiene muy poco espacio
+    } catch (e) {
+        esIncognito = true;
+    }
+
+    try {
+        localStorage.setItem("prueba", "1");
+        localStorage.removeItem("prueba");
+    } catch (e) {
+        esIncognito = true;
+    }
+
+    if (esIncognito) {
+        document.body.innerHTML = `
+            <div style="padding: 30px; text-align: center;">
+                <h2>🚫 No se permite el acceso en modo incógnito.</h2>
+                <p>Por favor, abre esta página desde una ventana normal del navegador.</p>
+            </div>`;
+    }
+}
+
+// Llamar apenas carga la página
+detectarModoIncognito();
+
 </script>
 </body>
 </html>
