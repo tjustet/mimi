@@ -1,110 +1,137 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Verificación QR</title>
-  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Escáner QR Personal</title>
+  <script src="https://unpkg.com/html5-qrcode"></script>
   <style>
     body {
       font-family: sans-serif;
       text-align: center;
-      padding: 10px;
+      margin: 0;
+      padding: 0;
     }
+
     #reader {
-      width: 300px;
+      width: 100%;
+      max-width: 500px;
       margin: auto;
+      padding-top: 10px;
     }
-    #resultado {
+
+    #status {
+      font-size: 20px;
       margin-top: 20px;
-      font-size: 18px;
+    }
+
+    .success {
+      color: green;
+    }
+
+    .error {
+      color: red;
     }
   </style>
 </head>
 <body>
-
-  <h2>Escanear QR</h2>
+  <h2>Escaneá el QR del personal</h2>
   <div id="reader"></div>
-  <div id="resultado">Esperando escaneo...</div>
+  <div id="status"></div>
 
   <script>
+    // Configuración de usuario conocido
+    const usuario = {
+      dni: "45167317",
+      nombre: "Tomas Enriquez Justet",
+      secret: "12345"
+    };
+
+    // TOTP simplificado (como antes)
     class TOTP {
       constructor() {
         this.keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
       }
+
       base32tohex(base32) {
         let bits = "", hex = "";
         for (let i = 0; i < base32.length; i++) {
-          let val = this.keyStr.indexOf(base32.charAt(i).toUpperCase());
+          const val = this.keyStr.indexOf(base32.charAt(i).toUpperCase());
           bits += val.toString(2).padStart(5, "0");
         }
         for (let i = 0; i + 4 <= bits.length; i += 4) {
-          let chunk = bits.substring(i, i + 4);
-          hex += parseInt(chunk, 2).toString(16);
+          hex += parseInt(bits.substring(i, i + 4), 2).toString(16);
         }
         return hex;
       }
-      getOTP(secret) {
-        const epoch = Math.round(new Date().getTime() / 1000.0);
+
+      async getOTP(secret) {
+        const epoch = Math.floor(Date.now() / 1000);
         const time = Math.floor(epoch / 10).toString(16).padStart(16, "0");
         const key = this.base32tohex(secret);
-        const timeBytes = new Uint8Array(time.match(/.{1,2}/g).map(b => parseInt(b, 16)));
         const keyBytes = new Uint8Array(key.match(/.{1,2}/g).map(b => parseInt(b, 16)));
+        const timeBytes = new Uint8Array(time.match(/.{1,2}/g).map(b => parseInt(b, 16)));
 
-        return window.crypto.subtle.importKey(
-          "raw", keyBytes, { name: "HMAC", hash: "SHA-1" }, false, ["sign"]
-        ).then(key =>
-          window.crypto.subtle.sign("HMAC", key, timeBytes)
-        ).then(hmac => {
-          const hmacBytes = new Uint8Array(hmac);
-          const offset = hmacBytes[hmacBytes.length - 1] & 0xf;
-          const bin_code = (hmacBytes[offset] & 0x7f) << 24 |
-                          (hmacBytes[offset + 1] & 0xff) << 16 |
-                          (hmacBytes[offset + 2] & 0xff) << 8 |
-                          (hmacBytes[offset + 3] & 0xff);
-          return (bin_code % 1000000).toString().padStart(6, "0");
-        });
+        const cryptoKey = await window.crypto.subtle.importKey("raw", keyBytes, { name: "HMAC", hash: "SHA-1" }, false, ["sign"]);
+        const hmac = await window.crypto.subtle.sign("HMAC", cryptoKey, timeBytes);
+        const hmacBytes = new Uint8Array(hmac);
+        const offset = hmacBytes[hmacBytes.length - 1] & 0xf;
+
+        const bin_code = (hmacBytes[offset] & 0x7f) << 24 |
+                         (hmacBytes[offset + 1] & 0xff) << 16 |
+                         (hmacBytes[offset + 2] & 0xff) << 8 |
+                         (hmacBytes[offset + 3] & 0xff);
+
+        return (bin_code % 1000000).toString().padStart(6, "0");
       }
     }
 
-    const dni = "12345678";
-    const nombre = "Tomas";
-    const apellido = "Enriquez Justet";
-    const secreto = "12345"; // código secreto en base32, debe coincidir con el del generador
+    // Escaneo
+    const statusEl = document.getElementById("status");
+    const reader = new Html5Qrcode("reader");
+    const totp = new TOTP();
 
-    function verificarDatos(payload) {
-      const totp = new TOTP();
-      totp.getOTP(secreto).then(codigoActual => {
-        if (payload.code === codigoActual) {
-          document.getElementById("resultado").innerText =
-            `✅ Verificado\nDNI: ${dni}\nNombre: ${nombre} ${apellido}`;
+    async function verificar(data) {
+      try {
+        const parsed = JSON.parse(data);
+        const code = parsed.code;
+        const dni = parsed.dni;
+
+        const expectedCode = await totp.getOTP(usuario.secret);
+
+        if (dni === usuario.dni && code === expectedCode) {
+          statusEl.innerHTML = `✅ Bienvenido <strong>${usuario.nombre}</strong>`;
+          statusEl.className = "success";
         } else {
-          document.getElementById("resultado").innerText = "❌ Código inválido";
+          statusEl.innerHTML = "❌ Código o DNI inválido.";
+          statusEl.className = "error";
         }
-      });
+
+        // Esperar 2 segundos y volver a escanear
+        setTimeout(() => {
+          statusEl.innerHTML = "";
+          reader.start({ facingMode: "environment" }, config, qrCallback);
+        }, 2000);
+
+      } catch (err) {
+        statusEl.innerHTML = "⚠️ QR no válido.";
+        statusEl.className = "error";
+        setTimeout(() => {
+          statusEl.innerHTML = "";
+          reader.start({ facingMode: "environment" }, config, qrCallback);
+        }, 2000);
+      }
     }
 
-    const html5QrCode = new Html5Qrcode("reader");
-    const config = { fps: 10, qrbox: 250 };
+    const qrCallback = (decodedText, result) => {
+      reader.stop().then(() => {
+        verificar(decodedText);
+      });
+    };
 
-    html5QrCode.start(
-      { facingMode: "environment" },
-      config,
-      qrCodeMessage => {
-        try {
-          const payload = JSON.parse(qrCodeMessage);
-          verificarDatos(payload);
-        } catch (e) {
-          document.getElementById("resultado").innerText = "❌ QR inválido";
-        }
-        html5QrCode.stop();
-      },
-      errorMessage => {
-        // Ignorar errores de escaneo
-      }
-    ).catch(err => {
-      document.getElementById("resultado").innerText = "Error al iniciar la cámara: " + err;
-    });
+    const config = { fps: 10, qrbox: { width: 300, height: 300 } };
+
+    reader.start({ facingMode: "environment" }, config, qrCallback);
   </script>
-
 </body>
 </html>
