@@ -5,33 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Escáner de DNI</title>
   <style>
-    html, body {
+    body {
       margin: 0;
       padding: 0;
-      height: 100%;
       font-family: sans-serif;
       background-color: #000;
       color: #fff;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
     }
 
     #video {
       width: 100%;
-      height: 100vh;
+      height: 60vh;
       object-fit: cover;
+      background-color: #000;
     }
 
     #datos {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      background: rgba(0, 0, 0, 0.7);
+      flex-grow: 1;
+      background-color: #111;
       padding: 20px;
       font-size: 1.2em;
-      display: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     .dato {
-      margin: 5px 0;
+      margin: 10px 0;
     }
   </style>
 </head>
@@ -40,9 +43,9 @@
   <video id="video" autoplay playsinline></video>
 
   <div id="datos">
-    <div class="dato"><strong>DNI:</strong> <span id="dni"></span></div>
-    <div class="dato"><strong>Nombre:</strong> <span id="nombre"></span></div>
-    <div class="dato"><strong>Apellido:</strong> <span id="apellido"></span></div>
+    <div class="dato"><strong>DNI:</strong> <span id="dni">Esperando...</span></div>
+    <div class="dato"><strong>Nombre:</strong> <span id="nombre">---</span></div>
+    <div class="dato"><strong>Apellido:</strong> <span id="apellido">---</span></div>
   </div>
 
   <script type="module">
@@ -50,7 +53,10 @@
 
     const codeReader = new BrowserMultiFormatReader();
     const video = document.getElementById('video');
-    const datosDiv = document.getElementById('datos');
+
+    const dniEl = document.getElementById('dni');
+    const nombreEl = document.getElementById('nombre');
+    const apellidoEl = document.getElementById('apellido');
 
     codeReader.decodeFromVideoDevice(null, video, (result, err) => {
       if (result) {
@@ -61,14 +67,9 @@
           const nombre = partes[2];
           const dni = partes[4];
 
-          document.getElementById('apellido').textContent = apellido;
-          document.getElementById('nombre').textContent = nombre;
-          document.getElementById('dni').textContent = dni;
-
-          datosDiv.style.display = 'block';
-
-          // Opcional: detener escaneo luego de obtener un resultado válido
-          codeReader.reset();
+          apellidoEl.textContent = apellido;
+          nombreEl.textContent = nombre;
+          dniEl.textContent = dni;
         }
       }
     });
