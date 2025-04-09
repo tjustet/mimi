@@ -2,97 +2,89 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Escaner QR de Personal</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+  <title>QR dinámico</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    body { font-family: sans-serif; padding: 20px; text-align: center; }
+    input { padding: 10px; width: 300px; margin: 5px; }
+    #qrcode { margin-top: 20px; }
+  </style>
 </head>
 <body>
-  <h2>Escanear QR del personal</h2>
-  <div id="reader" style="width: 100%; max-width: 600px; height: 400px;"></div>
-  <div id="resultado" style="margin-top: 20px; font-size: 20px; font-weight: bold;"></div>
+  <h2>QR dinámico (cada 10 segundos)</h2>
+  <input type="text" id="dni" placeholder="Ingresá DNI" /><br>
+  <input type="text" id="secret" placeholder="Ingresá clave secreta en base32" /><br>
+  <button onclick="startQR()">Generar</button>
+  <div id="qrcode"></div>
 
   <script>
     class TOTP {
       constructor() {
         this.keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
       }
-
       base32tohex(base32) {
         let bits = "";
         let hex = "";
-
         for (let i = 0; i < base32.length; i++) {
           let val = this.keyStr.indexOf(base32.charAt(i).toUpperCase());
           bits += val.toString(2).padStart(5, "0");
         }
-
         for (let i = 0; i + 4 <= bits.length; i += 4) {
           let chunk = bits.substring(i, i + 4);
           hex += parseInt(chunk, 2).toString(16);
         }
         return hex;
       }
-
-      async getOTP(secret) {
+      getOTP(secret) {
         const epoch = Math.round(new Date().getTime() / 1000.0);
         const time = Math.floor(epoch / 10).toString(16).padStart(16, "0");
-
+        const crypto = window.crypto || window.msCrypto;
         const key = this.base32tohex(secret);
         const timeBytes = new Uint8Array(time.match(/.{1,2}/g).map(b => parseInt(b, 16)));
         const keyBytes = new Uint8Array(key.match(/.{1,2}/g).map(b => parseInt(b, 16)));
 
-        const cryptoKey = await window.crypto.subtle.importKey(
+        return window.crypto.subtle.importKey(
           "raw", keyBytes, { name: "HMAC", hash: "SHA-1" }, false, ["sign"]
-        );
+        ).then(key =>
+          window.crypto.subtle.sign("HMAC", key, timeBytes)
+        ).then(hmac => {
+          const hmacBytes = new Uint8Array(hmac);
+          const offset = hmacBytes[hmacBytes.length - 1] & 0xf;
+          const bin_code = (hmacBytes[offset] & 0x7f) << 24 |
+                          (hmacBytes[offset + 1] & 0xff) << 16 |
+                          (hmacBytes[offset + 2] & 0xff) << 8 |
+                          (hmacBytes[offset + 3] & 0xff);
 
-        const hmac = await window.crypto.subtle.sign("HMAC", cryptoKey, timeBytes);
-        const hmacBytes = new Uint8Array(hmac);
-        const offset = hmacBytes[hmacBytes.length - 1] & 0xf;
-        const bin_code = (hmacBytes[offset] & 0x7f) << 24 |
-                         (hmacBytes[offset + 1] & 0xff) << 16 |
-                         (hmacBytes[offset + 2] & 0xff) << 8 |
-                         (hmacBytes[offset + 3] & 0xff);
-
-        return (bin_code % 1000000).toString().padStart(6, "0");
+          return (bin_code % 1000000).toString().padStart(6, "0");
+        });
       }
     }
 
-    const baseDeDatos = {
-      "45167317": {
-        nombre: "Tomas Enriquez Justet",
-        secret: "JBSWY3DPEHPK3PXP"
+    let qrCode, interval;
+
+    async function generarQR(dni, secret) {
+      const payload = JSON.stringify({ dni: dni, secret: secret });
+      if (!qrCode) {
+        qrCode = new QRCode(document.getElementById("qrcode"), {
+          text: payload,
+          width: 200,
+          height: 200,
+        });
+      } else {
+        qrCode.clear();
+        qrCode.makeCode(payload);
       }
-    };
-
-    function iniciarEscaner() {
-      const html5QrCode = new Html5Qrcode("reader");
-      html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, async (qrCodeMessage) => {
-        try {
-          const data = JSON.parse(qrCodeMessage);
-          const dni = data.dni;
-          const secret = data.secret;
-
-          if (!baseDeDatos[dni]) {
-            document.getElementById("resultado").innerText = "Usuario no encontrado en la base de datos.";
-            return;
-          }
-
-          const totp = new TOTP();
-          const codigoEsperado = await totp.getOTP(secret);
-          const codigoReal = await totp.getOTP(baseDeDatos[dni].secret);
-
-          if (codigoEsperado === codigoReal) {
-            document.getElementById("resultado").innerText = `✅ Acceso permitido: ${baseDeDatos[dni].nombre} (DNI ${dni})`;
-          } else {
-            document.getElementById("resultado").innerText = "❌ Código inválido. QR alterado o vencido.";
-          }
-        } catch (e) {
-          document.getElementById("resultado").innerText = "Error leyendo QR";
-        }
-      });
     }
 
-    iniciarEscaner();
+    function startQR() {
+      const dni = document.getElementById("dni").value.trim();
+      const secret = document.getElementById("secret").value.trim().replace(/\s+/g, '');
+      if (!dni || !secret) return alert("Completá ambos campos: DNI y clave secreta");
+
+      if (interval) clearInterval(interval);
+      generarQR(dni, secret);
+      interval = setInterval(() => generarQR(dni, secret), 10000); // cada 10s
+    }
   </script>
 </body>
 </html>
