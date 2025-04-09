@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Verificación QR</title>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 10px;
+    }
+    #reader {
+      width: 300px;
+      margin: auto;
+    }
+    #resultado {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Escanear QR</h2>
+  <div id="reader"></div>
+  <div id="resultado">Esperando escaneo...</div>
+
+  <script>
+    class TOTP {
+      constructor() {
+        this.keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+      }
+      base32tohex(base32) {
+        let bits = "", hex = "";
+        for (let i = 0; i < base32.length; i++) {
+          let val = this.keyStr.indexOf(base32.charAt(i).toUpperCase());
+          bits += val.toString(2).padStart(5, "0");
+        }
+        for (let i = 0; i + 4 <= bits.length; i += 4) {
+          let chunk = bits.substring(i, i + 4);
+          hex += parseInt(chunk, 2).toString(16);
+        }
+        return hex;
+      }
+      getOTP(secret) {
+        const epoch = Math.round(new Date().getTime() / 1000.0);
+        const time = Math.floor(epoch / 10).toString(16).padStart(16, "0");
+        const key = this.base32tohex(secret);
+        const timeBytes = new Uint8Array(time.match(/.{1,2}/g).map(b => parseInt(b, 16)));
+        const keyBytes = new Uint8Array(key.match(/.{1,2}/g).map(b => parseInt(b, 16)));
+
+        return window.crypto.subtle.importKey(
+          "raw", keyBytes, { name: "HMAC", hash: "SHA-1" }, false, ["sign"]
+        ).then(key =>
+          window.crypto.subtle.sign("HMAC", key, timeBytes)
+        ).then(hmac => {
+          const hmacBytes = new Uint8Array(hmac);
+          const offset = hmacBytes[hmacBytes.length - 1] & 0xf;
+          const bin_code = (hmacBytes[offset] & 0x7f) << 24 |
+                          (hmacBytes[offset + 1] & 0xff) << 16 |
+                          (hmacBytes[offset + 2] & 0xff) << 8 |
+                          (hmacBytes[offset + 3] & 0xff);
+          return (bin_code % 1000000).toString().padStart(6, "0");
+        });
+      }
+    }
+
+    const dni = "12345678";
+    const nombre = "Tomas";
+    const apellido = "Enriquez Justet";
+    const secreto = "12345"; // código secreto en base32, debe coincidir con el del generador
+
+    function verificarDatos(payload) {
+      const totp = new TOTP();
+      totp.getOTP(secreto).then(codigoActual => {
+        if (payload.code === codigoActual) {
+          document.getElementById("resultado").innerText =
+            `✅ Verificado\nDNI: ${dni}\nNombre: ${nombre} ${apellido}`;
+        } else {
+          document.getElementById("resultado").innerText = "❌ Código inválido";
+        }
+      });
+    }
+
+    const html5QrCode = new Html5Qrcode("reader");
+    const config = { fps: 10, qrbox: 250 };
+
+    html5QrCode.start(
+      { facingMode: "environment" },
+      config,
+      qrCodeMessage => {
+        try {
+          const payload = JSON.parse(qrCodeMessage);
+          verificarDatos(payload);
+        } catch (e) {
+          document.getElementById("resultado").innerText = "❌ QR inválido";
+        }
+        html5QrCode.stop();
+      },
+      errorMessage => {
+        // Ignorar errores de escaneo
+      }
+    ).catch(err => {
+      document.getElementById("resultado").innerText = "Error al iniciar la cámara: " + err;
+    });
+  </script>
+
+</body>
+</html>
