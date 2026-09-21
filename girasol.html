@@ -1,0 +1,507 @@
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campo de Girasoles</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            overflow-x: hidden;
+            font-family: Georgia, serif;
+            background: #87ceeb;
+        }
+
+        /* Cielo */
+        .cielo {
+            position: fixed;
+            inset: 0;
+            background:
+                linear-gradient(
+                    to bottom,
+                    #72c7f0 0%,
+                    #bde8fa 65%,
+                    #eaf8ff 100%
+                );
+            z-index: -5;
+        }
+
+        /* Sol */
+        .sol {
+            position: fixed;
+            width: 130px;
+            height: 130px;
+            background: #ffd84d;
+            border-radius: 50%;
+            top: 60px;
+            right: 100px;
+            box-shadow:
+                0 0 40px #ffe98a,
+                0 0 80px rgba(255, 220, 70, 0.5);
+            z-index: -4;
+        }
+
+        /* Nubes */
+        .nube {
+            position: fixed;
+            width: 180px;
+            height: 55px;
+            background: rgba(255,255,255,0.8);
+            border-radius: 50px;
+            z-index: -3;
+            opacity: .8;
+        }
+
+        .nube::before,
+        .nube::after {
+            content: "";
+            position: absolute;
+            background: rgba(255,255,255,0.8);
+            border-radius: 50%;
+        }
+
+        .nube::before {
+            width: 75px;
+            height: 75px;
+            left: 25px;
+            bottom: 10px;
+        }
+
+        .nube::after {
+            width: 90px;
+            height: 90px;
+            right: 25px;
+            bottom: 5px;
+        }
+
+        .nube1 {
+            top: 100px;
+            left: 8%;
+        }
+
+        .nube2 {
+            top: 220px;
+            right: 18%;
+            transform: scale(.7);
+        }
+
+        /* Campo */
+        .campo {
+            min-height: 100vh;
+            padding-top: 55vh;
+            position: relative;
+            overflow: hidden;
+
+            background:
+                linear-gradient(
+                    to bottom,
+                    transparent 0%,
+                    rgba(74, 130, 42, .2) 10%,
+                    #4f8b2e 35%,
+                    #356b24 100%
+                );
+        }
+
+        /* Título */
+        .titulo {
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            color: white;
+            text-shadow: 0 3px 10px rgba(0,0,0,.35);
+            z-index: 20;
+        }
+
+        .titulo h1 {
+            font-size: clamp(32px, 5vw, 65px);
+            margin: 0;
+            font-weight: normal;
+        }
+
+        .titulo p {
+            font-size: 20px;
+            margin-top: 10px;
+        }
+
+        /* Campo de flores */
+        .girasoles {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        .girasol {
+            position: absolute;
+            transform-origin: bottom center;
+            animation: viento 4s ease-in-out infinite;
+        }
+
+        /* Tallo */
+        .tallo {
+            width: 8px;
+            height: 150px;
+            background: linear-gradient(
+                to right,
+                #286323,
+                #4d9632,
+                #286323
+            );
+            border-radius: 10px;
+            margin: auto;
+            position: relative;
+        }
+
+        /* Hoja */
+        .hoja {
+            position: absolute;
+            width: 55px;
+            height: 25px;
+            background: #4c9b2f;
+            border-radius: 100% 0 100% 0;
+        }
+
+        .hoja.izq {
+            left: -45px;
+            top: 65px;
+            transform: rotate(-25deg);
+        }
+
+        .hoja.der {
+            right: -45px;
+            top: 90px;
+            transform: rotate(25deg) scaleX(-1);
+        }
+
+        /* Flor */
+        .flor {
+            position: absolute;
+            width: 85px;
+            height: 85px;
+            left: 50%;
+            top: -60px;
+            transform: translateX(-50%);
+        }
+
+        .petalo {
+            position: absolute;
+            width: 38px;
+            height: 58px;
+            background: #ffd21f;
+            border-radius: 50%;
+            left: 50%;
+            top: 50%;
+            transform-origin: center bottom;
+            transform: translate(-50%, -100%);
+        }
+
+        .petalo:nth-child(1)  { transform: translate(-50%, -100%) rotate(0deg); }
+        .petalo:nth-child(2)  { transform: translate(-50%, -100%) rotate(45deg); }
+        .petalo:nth-child(3)  { transform: translate(-50%, -100%) rotate(90deg); }
+        .petalo:nth-child(4)  { transform: translate(-50%, -100%) rotate(135deg); }
+        .petalo:nth-child(5)  { transform: translate(-50%, -100%) rotate(180deg); }
+        .petalo:nth-child(6)  { transform: translate(-50%, -100%) rotate(225deg); }
+        .petalo:nth-child(7)  { transform: translate(-50%, -100%) rotate(270deg); }
+        .petalo:nth-child(8)  { transform: translate(-50%, -100%) rotate(315deg); }
+
+        .centro {
+            position: absolute;
+            width: 42px;
+            height: 42px;
+            background:
+                radial-gradient(circle, #9b5a13 15%, #67360c 70%);
+            border-radius: 50%;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+        }
+
+        /* Girasol normal */
+        .normal {
+            transform: scale(.55);
+            opacity: .85;
+        }
+
+        /* Girasol destacado */
+        .destacado {
+            transform: scale(1.15);
+            z-index: 10;
+        }
+
+        .destacado .flor {
+            width: 120px;
+            height: 120px;
+        }
+
+        .destacado .petalo {
+            width: 55px;
+            height: 78px;
+        }
+
+        .destacado .centro {
+            width: 60px;
+            height: 60px;
+        }
+
+        /* Número */
+        .numero {
+            position: absolute;
+            top: -145px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255,255,255,.95);
+            color: #5b3900;
+            padding: 12px 20px;
+            border-radius: 30px;
+            font-size: 22px;
+            font-weight: bold;
+            white-space: nowrap;
+            box-shadow: 0 5px 20px rgba(0,0,0,.2);
+        }
+
+        /* Próximo día */
+        .siguiente {
+            transform: scale(.65);
+            opacity: .95;
+            z-index: 11;
+        }
+
+        .siguiente .flor {
+            animation: crecer 3s ease-in-out infinite;
+        }
+
+        .frase {
+            position: absolute;
+            top: -125px;
+            left: 80px;
+            width: 220px;
+            padding: 15px;
+            background: rgba(255,255,255,.95);
+            border-radius: 15px;
+            color: #594000;
+            font-size: 16px;
+            line-height: 1.4;
+            box-shadow: 0 5px 20px rgba(0,0,0,.18);
+        }
+
+        /* Animaciones */
+        @keyframes viento {
+            0%, 100% {
+                rotate: -1deg;
+            }
+
+            50% {
+                rotate: 1deg;
+            }
+        }
+
+        @keyframes crecer {
+            0%, 100% {
+                scale: .9;
+            }
+
+            50% {
+                scale: 1.05;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 700px) {
+            .sol {
+                width: 90px;
+                height: 90px;
+                right: 30px;
+            }
+
+            .titulo {
+                width: 90%;
+            }
+
+            .titulo p {
+                font-size: 16px;
+            }
+
+            .frase {
+                width: 180px;
+                left: 60px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="cielo"></div>
+
+    <div class="sol"></div>
+
+    <div class="nube nube1"></div>
+    <div class="nube nube2"></div>
+
+    <main class="campo">
+
+        <div class="titulo">
+            <h1>🌻 Nuestro campo 🌻</h1>
+            <p>Un girasol por cada día desde el 4 de agosto de 2024</p>
+        </div>
+
+        <div class="girasoles" id="girasoles"></div>
+
+    </main>
+
+    <script>
+
+        const inicio = new Date("2024-08-04T00:00:00");
+
+        const ahora = new Date();
+
+        const diferencia = ahora - inicio;
+
+        const dias = Math.floor(
+            diferencia / (1000 * 60 * 60 * 24)
+        );
+
+        const campo = document.getElementById("girasoles");
+
+        /*
+         * Creamos los girasoles correspondientes
+         * a todos los días transcurridos.
+         *
+         * Se generan de forma aleatoria
+         * para que el campo parezca natural.
+         */
+
+        const cantidad = dias;
+
+        for (let i = 1; i <= cantidad; i++) {
+
+            const girasol = document.createElement("div");
+
+            girasol.className = "girasol normal";
+
+            const x = Math.random() * 100;
+            const y = Math.random() * 90;
+
+            girasol.style.left = `${x}%`;
+            girasol.style.top = `${y}%`;
+
+            girasol.style.animationDelay =
+                `${Math.random() * 4}s`;
+
+            girasol.innerHTML = `
+                <div class="flor">
+                    <div class="petalo"></div>
+                    <div class="petalo"></div>
+                    <div class="petalo"></div>
+                    <div class="petalo"></div>
+                    <div class="petalo"></div>
+                    <div class="petalo"></div>
+                    <div class="petalo"></div>
+                    <div class="petalo"></div>
+                    <div class="centro"></div>
+                </div>
+
+                <div class="tallo">
+                    <div class="hoja izq"></div>
+                    <div class="hoja der"></div>
+                </div>
+            `;
+
+            campo.appendChild(girasol);
+        }
+
+        /*
+         * Girasol principal
+         */
+
+        const principal = document.createElement("div");
+
+        principal.className = "girasol destacado";
+
+        principal.style.left = "50%";
+        principal.style.top = "70%";
+
+        principal.innerHTML = `
+            <div class="numero">
+                🌻 Día ${dias}
+            </div>
+
+            <div class="flor">
+                <div class="petalo"></div>
+                <div class="petalo"></div>
+                <div class="petalo"></div>
+                <div class="petalo"></div>
+                <div class="petalo"></div>
+                <div class="petalo"></div>
+                <div class="petalo"></div>
+                <div class="petalo"></div>
+                <div class="centro"></div>
+            </div>
+
+            <div class="tallo">
+                <div class="hoja izq"></div>
+                <div class="hoja der"></div>
+            </div>
+        `;
+
+        campo.appendChild(principal);
+
+
+        /*
+         * Girasol del día siguiente.
+         * Todavía está creciendo.
+         */
+
+        const siguiente = document.createElement("div");
+
+        siguiente.className = "girasol siguiente";
+
+        siguiente.style.left = "65%";
+        siguiente.style.top = "73%";
+
+        siguiente.innerHTML = `
+            <div class="frase">
+                <strong>🌱 Día ${dias + 1}</strong>
+                <br><br>
+
+                ACA VA LA FRASE
+                <br><br>
+
+                <small>
+                    Este girasol todavía está creciendo...
+                </small>
+            </div>
+
+            <div class="flor">
+                <div class="petalo"></div>
+                <div class="petalo"></div>
+                <div class="petalo"></div>
+                <div class="petalo"></div>
+                <div class="petalo"></div>
+                <div class="petalo"></div>
+                <div class="petalo"></div>
+                <div class="petalo"></div>
+                <div class="centro"></div>
+            </div>
+
+            <div class="tallo">
+                <div class="hoja izq"></div>
+                <div class="hoja der"></div>
+            </div>
+        `;
+
+        campo.appendChild(siguiente);
+
+    </script>
+
+</body>
+</html>
+```
