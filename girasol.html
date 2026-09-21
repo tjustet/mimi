@@ -11,7 +11,7 @@
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
 >
 
-<title>🌻 Campo</title>
+<title>🌻 Nuestro campo</title>
 
 
 <style>
@@ -22,29 +22,36 @@
 
 * {
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
 }
 
 html,
 body {
+
+    margin: 0;
+    padding: 0;
+
     width: 100%;
     height: 100%;
+
     overflow: hidden;
+
 }
 
 body {
+
     font-family:
         Georgia,
         "Times New Roman",
         serif;
 
-    background: #6fa9c3;
+    background:
+        #729eb2;
+
 }
 
 
 /* =====================================================
-   ESCENA COMPLETA
+   ESCENA
 ===================================================== */
 
 .escena {
@@ -57,29 +64,44 @@ body {
     overflow: hidden;
 
     background:
+
         linear-gradient(
             to bottom,
 
-            #729fb5 0%,
-            #a9c4cc 28%,
-            #b9c9c5 43%,
-            #789b5d 58%,
-            #426d2d 100%
+            #719daf 0%,
+            #a9c2c5 28%,
+            #c4cfca 42%,
+            #779957 57%,
+            #4a7a31 75%,
+            #315d23 100%
         );
+
 }
 
 
 /* =====================================================
-   CIELO
+   SOL
 ===================================================== */
 
-.cielo {
+.sol {
 
     position: absolute;
 
-    inset: 0;
+    width: 85px;
+    height: 85px;
 
-    pointer-events: none;
+    right: 12%;
+    top: 8%;
+
+    border-radius: 50%;
+
+    background:
+        rgba(255,222,116,.7);
+
+    box-shadow:
+        0 0 40px
+        rgba(255,230,145,.55);
+
 }
 
 
@@ -91,17 +113,16 @@ body {
 
     position: absolute;
 
-    width: 180px;
-    height: 50px;
+    width: 160px;
+    height: 42px;
 
     background:
-        rgba(255,255,255,.42);
+        rgba(255,255,255,.45);
 
-    border-radius: 100px;
+    border-radius: 50px;
 
-    filter: blur(4px);
+    filter: blur(5px);
 
-    opacity: .7;
 }
 
 
@@ -113,29 +134,32 @@ body {
     position: absolute;
 
     background:
-        rgba(255,255,255,.42);
+        rgba(255,255,255,.45);
 
     border-radius: 50%;
+
 }
 
 
 .nube::before {
 
-    width: 80px;
-    height: 80px;
+    width: 65px;
+    height: 65px;
 
     left: 20px;
     bottom: 5px;
+
 }
 
 
 .nube::after {
 
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
 
-    right: 15px;
+    right: 20px;
     bottom: 0;
+
 }
 
 
@@ -144,54 +168,30 @@ body {
     top: 12%;
     left: -60px;
 
-    transform: scale(.9);
 }
 
 
 .nube2 {
 
-    top: 24%;
+    top: 25%;
     right: -70px;
 
-    transform: scale(.65);
+    transform:
+        scale(.7);
+
 }
 
 
 .nube3 {
 
-    top: 8%;
-    left: 42%;
+    top: 17%;
+    left: 35%;
 
-    transform: scale(.5);
+    transform:
+        scale(.45);
 
     opacity: .35;
-}
 
-
-/* =====================================================
-   SOL DIFUSO
-===================================================== */
-
-.sol {
-
-    position: absolute;
-
-    width: 95px;
-    height: 95px;
-
-    top: 7%;
-    right: 13%;
-
-    border-radius: 50%;
-
-    background:
-        rgba(255,222,113,.8);
-
-    box-shadow:
-        0 0 45px
-        rgba(255,226,137,.55);
-
-    filter: blur(1px);
 }
 
 
@@ -203,181 +203,94 @@ body {
 
     position: absolute;
 
-    left: -15%;
-    right: -15%;
+    left: 0;
+    right: 0;
+    bottom: 0;
 
-    bottom: -10%;
+    height: 56%;
 
-    height: 62%;
+    overflow: hidden;
 
     background:
 
         linear-gradient(
             to bottom,
-            #638f46 0%,
-            #4c7e32 25%,
-            #396927 65%,
-            #28521e 100%
+
+            #71964e,
+            #4e7e32 35%,
+            #3d6c29 70%,
+            #2d5520
         );
 
-    clip-path:
-
-        polygon(
-            0 28%,
-            50% 0,
-            100% 28%,
-            100% 100%,
-            0 100%
-        );
-
-    overflow: hidden;
 }
 
 
 /* =====================================================
-   CAMINO / PERSPECTIVA CENTRAL
+   HORIZONTE
 ===================================================== */
 
-.camino {
+.horizonte {
 
     position: absolute;
 
-    left: 50%;
-    bottom: -10%;
+    left: 0;
+    right: 0;
 
-    width: 35%;
-    height: 95%;
+    top: 0;
 
-    transform:
-        translateX(-50%);
+    height: 30%;
 
     background:
 
         linear-gradient(
-            to top,
-            rgba(151,123,72,.8),
-            rgba(177,153,101,.4),
+            to bottom,
+
+            rgba(216,225,218,.85),
+            rgba(216,225,218,.2),
             transparent
         );
 
-    clip-path:
+    filter:
+        blur(6px);
 
-        polygon(
-            38% 0,
-            62% 0,
-            100% 100%,
-            0 100%
-        );
+    z-index: 300;
 
-    opacity: .25;
+    pointer-events: none;
+
 }
 
 
 /* =====================================================
-   CONTENEDOR DE GIRASOLES
+   GIRASOLES
 ===================================================== */
 
-#campoGirasoles {
+#girasoles {
 
     position: absolute;
 
     inset: 0;
 
-    width: 100%;
-    height: 100%;
 }
 
 
-/* =====================================================
-   GIRASOL
-===================================================== */
+/*
+   Cada girasol es SOLO un elemento.
+
+   Esto es muchísimo más liviano
+   que tener pétalos, hojas y tallos
+   como elementos independientes.
+*/
 
 .girasol {
 
     position: absolute;
 
+    width: 22px;
+    height: 65px;
+
     transform-origin:
-        center bottom;
+        bottom center;
 
-    pointer-events: none;
-
-    animation:
-        viento 5s ease-in-out infinite;
-
-    z-index: 5;
-}
-
-
-/* =====================================================
-   TALLO
-===================================================== */
-
-.tallo {
-
-    position: absolute;
-
-    bottom: 0;
-
-    left: 50%;
-
-    width: 6px;
-    height: 100px;
-
-    transform:
-        translateX(-50%);
-
-    border-radius: 10px;
-
-    background:
-        linear-gradient(
-            to right,
-            #285c20,
-            #559536,
-            #285c20
-        );
-}
-
-
-/* =====================================================
-   HOJAS
-===================================================== */
-
-.hoja {
-
-    position: absolute;
-
-    width: 42px;
-    height: 18px;
-
-    background:
-        #4e9230;
-
-    border-radius:
-        100%
-        0
-        100%
-        0;
-}
-
-
-.hoja.izquierda {
-
-    left: -34px;
-    top: 40px;
-
-    transform:
-        rotate(-28deg);
-}
-
-
-.hoja.derecha {
-
-    right: -34px;
-    top: 57px;
-
-    transform:
-        rotate(28deg)
-        scaleX(-1);
 }
 
 
@@ -385,191 +298,130 @@ body {
    FLOR
 ===================================================== */
 
-.flor {
+.girasol::before {
+
+    content: "";
 
     position: absolute;
 
-    width: 60px;
-    height: 60px;
+    width: 25px;
+    height: 25px;
 
-    top: -5px;
     left: 50%;
+    top: 0;
 
     transform:
         translateX(-50%);
-}
-
-
-/* =====================================================
-   PETALOS
-===================================================== */
-
-.petalo {
-
-    position: absolute;
-
-    left: 50%;
-    top: 50%;
-
-    width: 24px;
-    height: 38px;
-
-    transform-origin:
-        50% 100%;
-
-    background:
-        linear-gradient(
-            to bottom,
-            #ffe94a,
-            #f1bd12
-        );
-
-    border-radius: 50%;
-}
-
-
-.petalo:nth-child(1) {
-    transform:
-        translate(-50%, -100%)
-        rotate(0deg);
-}
-
-.petalo:nth-child(2) {
-    transform:
-        translate(-50%, -100%)
-        rotate(45deg);
-}
-
-.petalo:nth-child(3) {
-    transform:
-        translate(-50%, -100%)
-        rotate(90deg);
-}
-
-.petalo:nth-child(4) {
-    transform:
-        translate(-50%, -100%)
-        rotate(135deg);
-}
-
-.petalo:nth-child(5) {
-    transform:
-        translate(-50%, -100%)
-        rotate(180deg);
-}
-
-.petalo:nth-child(6) {
-    transform:
-        translate(-50%, -100%)
-        rotate(225deg);
-}
-
-.petalo:nth-child(7) {
-    transform:
-        translate(-50%, -100%)
-        rotate(270deg);
-}
-
-.petalo:nth-child(8) {
-    transform:
-        translate(-50%, -100%)
-        rotate(315deg);
-}
-
-
-/* =====================================================
-   CENTRO
-===================================================== */
-
-.centro {
-
-    position: absolute;
-
-    left: 50%;
-    top: 50%;
-
-    width: 30px;
-    height: 30px;
-
-    transform:
-        translate(-50%, -50%);
 
     border-radius: 50%;
 
     background:
+
         radial-gradient(
-            circle,
-            #9b611c 0%,
-            #60370d 75%
+            circle at center,
+
+            #75410e 0 28%,
+            #9b6019 29% 42%,
+            transparent 43%
+        ),
+
+        conic-gradient(
+
+            #f8d51d 0deg 20deg,
+            transparent 20deg 45deg,
+
+            #f8d51d 45deg 65deg,
+            transparent 65deg 90deg,
+
+            #f8d51d 90deg 110deg,
+            transparent 110deg 135deg,
+
+            #f8d51d 135deg 155deg,
+            transparent 155deg 180deg,
+
+            #f8d51d 180deg 200deg,
+            transparent 200deg 225deg,
+
+            #f8d51d 225deg 245deg,
+            transparent 245deg 270deg,
+
+            #f8d51d 270deg 290deg,
+            transparent 290deg 315deg,
+
+            #f8d51d 315deg 335deg,
+            transparent 335deg 360deg
         );
 
-    z-index: 5;
 }
 
 
 /* =====================================================
-   NIEBLA DEL FONDO
+   TALLO
 ===================================================== */
 
-.niebla {
+.girasol::after {
+
+    content: "";
 
     position: absolute;
 
-    left: 0;
-    right: 0;
-
-    top: 36%;
-
-    height: 35%;
-
-    background:
-
-        linear-gradient(
-            to bottom,
-
-            rgba(220,229,220,.75),
-            rgba(211,224,213,.40),
-            rgba(211,224,213,0)
-        );
-
-    pointer-events: none;
-
-    z-index: 20;
-
-    filter: blur(5px);
-}
-
-
-/* =====================================================
-   NIEBLA INFERIOR
-===================================================== */
-
-.nieblaCampo {
-
-    position: absolute;
-
-    left: 0;
-    right: 0;
+    left: 50%;
     bottom: 0;
 
-    height: 20%;
+    width: 4px;
+    height: 48px;
+
+    transform:
+        translateX(-50%);
+
+    border-radius: 10px;
 
     background:
 
         linear-gradient(
-            to top,
-            rgba(28,55,22,.25),
-            transparent
+            to right,
+            #285a20,
+            #559638,
+            #285a20
         );
 
-    pointer-events: none;
-
-    z-index: 30;
 }
 
 
 /* =====================================================
-   GIRASOL PRINCIPAL
+   MOVIMIENTO
+===================================================== */
+
+.girasol {
+
+    animation:
+        viento 5s ease-in-out infinite;
+
+}
+
+
+@keyframes viento {
+
+    0%,
+    100% {
+
+        rotate:
+            -1deg;
+
+    }
+
+    50% {
+
+        rotate:
+            1deg;
+
+    }
+
+}
+
+
+/* =====================================================
+   GIRASOL ACTUAL
 ===================================================== */
 
 .actual {
@@ -577,166 +429,230 @@ body {
     position: absolute;
 
     left: 50%;
+    bottom: 8%;
 
-    bottom: 10%;
-
-    width: 170px;
-    height: 280px;
+    width: 110px;
+    height: 220px;
 
     transform:
         translateX(-50%);
 
-    z-index: 100;
+    z-index: 1000;
 
     animation:
         vientoGrande 5s ease-in-out infinite;
+
 }
 
 
-/* Flor grande */
+.actual .florGrande {
 
-.actual .flor {
+    position: absolute;
 
-    width: 145px;
-    height: 145px;
+    width: 115px;
+    height: 115px;
 
-    top: -5px;
+    left: 50%;
+    top: 0;
+
+    transform:
+        translateX(-50%);
+
+    border-radius: 50%;
+
+    background:
+
+        radial-gradient(
+            circle,
+
+            #70400e 0 25%,
+            #956018 26% 35%,
+            transparent 36%
+        ),
+
+        conic-gradient(
+
+            #ffd91e 0deg 20deg,
+            transparent 20deg 45deg,
+
+            #ffd91e 45deg 65deg,
+            transparent 65deg 90deg,
+
+            #ffd91e 90deg 110deg,
+            transparent 110deg 135deg,
+
+            #ffd91e 135deg 155deg,
+            transparent 155deg 180deg,
+
+            #ffd91e 180deg 200deg,
+            transparent 200deg 225deg,
+
+            #ffd91e 225deg 245deg,
+            transparent 245deg 270deg,
+
+            #ffd91e 270deg 290deg,
+            transparent 290deg 315deg,
+
+            #ffd91e 315deg 335deg,
+            transparent 335deg 360deg
+        );
+
 }
 
 
-.actual .petalo {
+.actual .talloGrande {
 
-    width: 54px;
-    height: 78px;
-}
+    position: absolute;
 
+    left: 50%;
+    bottom: 0;
 
-.actual .centro {
+    width: 9px;
+    height: 155px;
 
-    width: 66px;
-    height: 66px;
-}
+    transform:
+        translateX(-50%);
 
+    background:
+        linear-gradient(
+            to right,
+            #23551d,
+            #559637,
+            #23551d
+        );
 
-.actual .tallo {
+    border-radius: 10px;
 
-    width: 10px;
-    height: 190px;
-}
-
-
-.actual .hoja {
-
-    width: 70px;
-    height: 30px;
-}
-
-
-.actual .hoja.izquierda {
-
-    left: -58px;
-    top: 95px;
-}
-
-
-.actual .hoja.derecha {
-
-    right: -58px;
-    top: 120px;
 }
 
 
 /* =====================================================
-   NUMERO DEL DÍA
+   NÚMERO
 ===================================================== */
 
 .numero {
 
     position: absolute;
 
+    top: -65px;
     left: 50%;
-
-    top: -78px;
 
     transform:
         translateX(-50%);
 
     padding:
-        10px 19px;
+        9px 17px;
 
-    border-radius: 30px;
-
-    white-space: nowrap;
+    border-radius:
+        30px;
 
     background:
         rgba(255,255,255,.95);
 
     color:
-        #674400;
+        #674300;
 
-    font-size: 20px;
+    white-space:
+        nowrap;
 
-    font-weight: bold;
+    font-size:
+        19px;
+
+    font-weight:
+        bold;
 
     box-shadow:
-        0 5px 20px
-        rgba(0,0,0,.22);
+        0 4px 15px
+        rgba(0,0,0,.2);
 
-    z-index: 200;
 }
 
 
 /* =====================================================
-   SIGUIENTE GIRASOL
+   SIGUIENTE
 ===================================================== */
 
 .siguiente {
 
     position: absolute;
 
-    left: calc(50% + 95px);
+    left: calc(50% + 70px);
 
-    bottom: 9%;
+    bottom: 7%;
 
-    width: 85px;
-    height: 140px;
+    width: 55px;
+    height: 95px;
 
-    z-index: 110;
-
-    transform:
-        scale(.65);
+    z-index: 1100;
 
     animation:
         crecer 3s ease-in-out infinite;
+
 }
 
 
 .siguiente .flor {
 
-    width: 55px;
-    height: 55px;
-}
+    position: absolute;
 
+    width: 42px;
+    height: 42px;
 
-.siguiente .petalo {
+    left: 50%;
 
-    width: 22px;
-    height: 33px;
-}
+    top: 0;
 
+    transform:
+        translateX(-50%);
 
-.siguiente .centro {
+    border-radius: 50%;
 
-    width: 27px;
-    height: 27px;
+    background:
+
+        radial-gradient(
+            circle,
+            #76440f 0 30%,
+            #9a5e16 31% 40%,
+            transparent 41%
+        ),
+
+        conic-gradient(
+            #f8d51d 0deg 30deg,
+            transparent 30deg 60deg,
+            #f8d51d 60deg 90deg,
+            transparent 90deg 120deg,
+            #f8d51d 120deg 150deg,
+            transparent 150deg 180deg,
+            #f8d51d 180deg 210deg,
+            transparent 210deg 240deg,
+            #f8d51d 240deg 270deg,
+            transparent 270deg 300deg,
+            #f8d51d 300deg 330deg,
+            transparent 330deg
+        );
+
 }
 
 
 .siguiente .tallo {
 
-    height: 95px;
+    position: absolute;
 
-    width: 6px;
+    left: 50%;
+    bottom: 0;
+
+    width: 5px;
+    height: 65px;
+
+    transform:
+        translateX(-50%);
+
+    background:
+        #3f7d2c;
+
+    border-radius:
+        10px;
+
 }
 
 
@@ -748,39 +664,45 @@ body {
 
     position: absolute;
 
-    width: 230px;
+    width: 210px;
 
-    left: -75px;
+    left: -85px;
 
-    bottom: 130px;
+    bottom: 75px;
 
     padding:
-        14px 17px;
+        13px 15px;
 
     background:
         rgba(255,255,255,.94);
 
     color:
-        #624300;
+        #604100;
 
     border-radius:
-        16px;
+        15px;
 
-    font-size: 15px;
+    text-align:
+        center;
 
-    line-height: 1.4;
+    font-size:
+        14px;
+
+    line-height:
+        1.4;
 
     box-shadow:
-        0 5px 18px
+        0 5px 15px
         rgba(0,0,0,.18);
 
-    text-align: center;
 }
 
 
 .frase strong {
 
-    font-size: 17px;
+    font-size:
+        16px;
+
 }
 
 
@@ -788,29 +710,23 @@ body {
    ANIMACIONES
 ===================================================== */
 
-@keyframes viento {
-
-    0%,
-    100% {
-        rotate: -1.5deg;
-    }
-
-    50% {
-        rotate: 1.5deg;
-    }
-}
-
-
 @keyframes vientoGrande {
 
     0%,
     100% {
-        rotate: -1deg;
+
+        rotate:
+            -.8deg;
+
     }
 
     50% {
-        rotate: 1deg;
+
+        rotate:
+            .8deg;
+
     }
+
 }
 
 
@@ -818,17 +734,24 @@ body {
 
     0%,
     100% {
-        scale: .62;
+
+        scale:
+            .92;
+
     }
 
     50% {
-        scale: .72;
+
+        scale:
+            1.05;
+
     }
+
 }
 
 
 /* =====================================================
-   RESPONSIVE
+   CELULARES PEQUEÑOS
 ===================================================== */
 
 @media (max-width: 380px) {
@@ -837,34 +760,38 @@ body {
 
         transform:
             translateX(-50%)
-            scale(.82);
+            scale(.85);
 
-        bottom: 8%;
+        bottom:
+            7%;
+
     }
+
 
     .siguiente {
 
-        left: calc(50% + 75px);
+        left:
+            calc(50% + 57px);
 
-        bottom: 7%;
     }
+
 
     .frase {
 
-        width: 205px;
+        width:
+            185px;
 
-        font-size: 14px;
+        left:
+            -75px;
 
-        left: -70px;
     }
 
-    .sol {
-
-        width: 70px;
-        height: 70px;
-    }
 }
 
+
+/* =====================================================
+   TABLET / PC
+===================================================== */
 
 @media (min-width: 700px) {
 
@@ -874,23 +801,15 @@ body {
             translateX(-50%)
             scale(1.15);
 
-        bottom: 8%;
     }
 
     .siguiente {
 
-        left: calc(50% + 150px);
+        left:
+            calc(50% + 110px);
 
-        transform:
-            scale(.8);
     }
 
-    .frase {
-
-        width: 270px;
-
-        font-size: 17px;
-    }
 }
 
 </style>
@@ -904,118 +823,72 @@ body {
 <div class="escena">
 
 
-    <!-- CIELO -->
+    <div class="sol"></div>
 
-    <div class="cielo"></div>
-
-
-    <!-- NUBES -->
 
     <div class="nube nube1"></div>
-
     <div class="nube nube2"></div>
-
     <div class="nube nube3"></div>
-
-
-    <!-- SOL -->
-
-    <div class="sol"></div>
 
 
     <!-- CAMPO -->
 
     <div class="campo">
 
-        <div class="camino"></div>
+        <div
+            id="girasoles">
+        </div>
 
-        <div id="campoGirasoles"></div>
+        <div class="horizonte"></div>
 
     </div>
 
 
-    <!-- NIEBLA DEL HORIZONTE -->
-
-    <div class="niebla"></div>
-
-    <div class="nieblaCampo"></div>
-
-
-    <!-- =========================================
-         GIRASOL DEL DÍA ACTUAL
-    ========================================== -->
+    <!-- =================================================
+         GIRASOL ACTUAL
+    ================================================== -->
 
     <div class="actual">
 
         <div
             class="numero"
-            id="numeroDia">
+            id="numero">
         </div>
 
 
-        <div class="flor">
-
-            <div class="petalo"></div>
-            <div class="petalo"></div>
-            <div class="petalo"></div>
-            <div class="petalo"></div>
-            <div class="petalo"></div>
-            <div class="petalo"></div>
-            <div class="petalo"></div>
-            <div class="petalo"></div>
-
-            <div class="centro"></div>
-
+        <div
+            class="florGrande">
         </div>
 
 
-        <div class="tallo">
-
-            <div class="hoja izquierda"></div>
-
-            <div class="hoja derecha"></div>
-
+        <div
+            class="talloGrande">
         </div>
 
     </div>
 
 
-    <!-- =========================================
-         GIRASOL DEL DÍA SIGUIENTE
-    ========================================== -->
+    <!-- =================================================
+         SIGUIENTE DÍA
+    ================================================== -->
 
     <div class="siguiente">
+
 
         <div class="frase">
 
             <strong id="diaSiguiente">
-                🌱 Día 779
+                🌱 Día siguiente
             </strong>
 
             <br><br>
 
-            <span>
-                ACA VA LA FRASE
-            </span>
+            ACA VA LA FRASE
 
         </div>
 
 
-        <div class="flor">
-
-            <div class="petalo"></div>
-            <div class="petalo"></div>
-            <div class="petalo"></div>
-            <div class="petalo"></div>
-            <div class="petalo"></div>
-            <div class="petalo"></div>
-            <div class="petalo"></div>
-            <div class="petalo"></div>
-
-            <div class="centro"></div>
-
-        </div>
-
+        <div class="flor"></div>
 
         <div class="tallo"></div>
 
@@ -1029,7 +902,7 @@ body {
 <script>
 
 /* =====================================================
-   FECHAS
+   CALCULAR DÍAS
 ===================================================== */
 
 const inicio =
@@ -1038,28 +911,23 @@ const inicio =
 const hoy =
     new Date();
 
-
 inicio.setHours(0,0,0,0);
 hoy.setHours(0,0,0,0);
 
 
-const diferencia =
-    hoy - inicio;
-
-
 const dias =
     Math.floor(
-        diferencia /
+        (hoy - inicio) /
         (1000 * 60 * 60 * 24)
     );
 
 
 /* =====================================================
-   TEXTOS
+   TEXTO
 ===================================================== */
 
 document.getElementById(
-    "numeroDia"
+    "numero"
 ).textContent =
     `🌻 Día ${dias}`;
 
@@ -1071,42 +939,100 @@ document.getElementById(
 
 
 /* =====================================================
-   CREAR EL CAMPO
+   CAMPO
 ===================================================== */
 
 const campo =
     document.getElementById(
-        "campoGirasoles"
+        "girasoles"
     );
 
 
 /*
-   IMPORTANTE:
+    MITAD DE LOS GIRASOLES
 
-   No los colocamos en filas.
+    778 / 2 = 389
 
-   Cada girasol recibe:
+    Usamos aproximadamente 389
+    elementos en lugar de 778.
+*/
 
-   - profundidad
-   - posición horizontal
-   - posición vertical
-   - tamaño
-   - desenfoque
-   - opacidad
+const cantidad =
+    Math.floor(dias / 2);
 
-   Así se genera la sensación
-   de un campo real.
+
+/*
+    Para que NO se amontonen,
+    dividimos visualmente el campo
+    en pequeñas zonas.
+
+    Pero NO hacemos filas.
+
+    Cada zona recibe algunos
+    girasoles aleatorios.
 */
 
 
+const columnas = 10;
+const filas = 7;
+
+const posiciones = [];
+
+
 for (
-    let dia = 1;
-    dia <= dias;
-    dia++
+    let f = 0;
+    f < filas;
+    f++
+) {
+
+    for (
+        let c = 0;
+        c < columnas;
+        c++
+    ) {
+
+        posiciones.push({
+            x:
+                (c / columnas) * 100
+                +
+                (Math.random() * 7 - 3.5),
+
+            y:
+                8 +
+                (f / filas) * 90
+                +
+                (Math.random() * 8 - 4)
+        });
+
+    }
+
+}
+
+
+/*
+    Mezclamos las posiciones
+    para que no parezca una cuadrícula.
+*/
+
+posiciones.sort(
+    () => Math.random() - .5
+);
+
+
+/* =====================================================
+   CREAR GIRASOLES
+===================================================== */
+
+for (
+    let i = 0;
+    i < cantidad;
+    i++
 ) {
 
     const flor =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
 
     flor.className =
@@ -1114,84 +1040,81 @@ for (
 
 
     /*
-       profundidad:
-
-       0 = muy lejos
-       1 = muy cerca
+       Elegimos una posición
+       previamente distribuida.
     */
 
-    const profundidad =
-        Math.random();
+    const pos =
+        posiciones[
+            i % posiciones.length
+        ];
 
 
     /*
-       Los girasoles del fondo
-       aparecen cerca del horizonte.
-    */
-
-    const y =
-        30 +
-        profundidad * 63;
-
-
-    /*
-       Distribución horizontal.
-
-       Agregamos cierta tendencia
-       hacia el centro para que
-       parezca perspectiva.
+       Pequeña variación para evitar
+       que los que compartan zona
+       queden juntos.
     */
 
     const x =
-        Math.random() * 100;
+        pos.x +
+        (Math.random() * 5 - 2.5);
+
+
+    const y =
+        pos.y +
+        (Math.random() * 5 - 2.5);
 
 
     /*
-       Tamaño según distancia.
+       Profundidad.
 
-       Lejanos = diminutos
-       Cercanos = grandes
+       Según la posición vertical,
+       los de abajo son más grandes.
+    */
+
+    const profundidad =
+        Math.min(
+            1,
+            Math.max(
+                0,
+                (y - 8) / 90
+            )
+        );
+
+
+    /*
+       Tamaño.
+
+       Fondo:
+       0.20
+
+       Frente:
+       0.75
     */
 
     const escala =
-        .12 +
-        profundidad * .78;
+        .18 +
+        profundidad * .62;
 
 
     /*
-       Los más cercanos quedan
-       por delante de los lejanos.
-    */
+       Desenfoque.
 
-    const z =
-        Math.floor(
-            profundidad * 100
-        );
-
-
-    /*
-       Desenfoque progresivo.
-
-       El fondo queda más difuso.
+       Más lejos = más niebla.
     */
 
     const blur =
-        Math.max(
-            0,
-            (0.45 - profundidad) * 3
-        );
+        (1 - profundidad) * 1.6;
 
 
     /*
        Opacidad.
-
-       Los lejanos se mezclan
-       con la niebla.
     */
 
-    const opacidad =
-        .35 +
-        profundidad * .65;
+    const opacity =
+        .45 +
+        profundidad * .5;
 
 
     flor.style.left =
@@ -1200,60 +1123,14 @@ for (
     flor.style.top =
         `${y}%`;
 
-    flor.style.zIndex =
-        z;
-
-    flor.style.opacity =
-        opacidad;
+    flor.style.transform =
+        `scale(${escala})`;
 
     flor.style.filter =
         `blur(${blur}px)`;
 
-    flor.style.transform =
-        `scale(${escala})`;
-
-
-    /*
-       Variación de tamaño del tallo
-       según profundidad.
-    */
-
-    const altura =
-        65 +
-        profundidad * 65;
-
-
-    flor.innerHTML = `
-
-        <div class="flor">
-
-            <div class="petalo"></div>
-            <div class="petalo"></div>
-            <div class="petalo"></div>
-            <div class="petalo"></div>
-            <div class="petalo"></div>
-            <div class="petalo"></div>
-            <div class="petalo"></div>
-            <div class="petalo"></div>
-
-            <div class="centro"></div>
-
-        </div>
-
-
-        <div
-            class="tallo"
-            style="
-                height:${altura}px;
-            "
-        >
-
-            <div class="hoja izquierda"></div>
-
-            <div class="hoja derecha"></div>
-
-        </div>
-    `;
+    flor.style.opacity =
+        opacity;
 
 
     /*
@@ -1264,12 +1141,24 @@ for (
         `${Math.random() * -5}s`;
 
 
-    campo.appendChild(flor);
+    /*
+       Variación horizontal.
+    */
+
+    flor.style.marginLeft =
+        `${Math.random() * 8 - 4}px`;
+
+
+    campo.appendChild(
+        flor
+    );
+
 }
 
 </script>
 
 
 </body>
+
 </html>
 ```
