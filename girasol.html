@@ -2,11 +2,16 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+>
 
 <title>Nuestro campo de girasoles 🌻</title>
 
 <style>
+
     * {
         box-sizing: border-box;
     }
@@ -17,7 +22,14 @@
         width: 100%;
         height: 100%;
         overflow: hidden;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+        font-family:
+            system-ui,
+            -apple-system,
+            BlinkMacSystemFont,
+            "Segoe UI",
+            sans-serif;
+
         background: #dce8ea;
     }
 
@@ -25,11 +37,17 @@
         touch-action: manipulation;
     }
 
+    /* =========================================
+       ESCENA
+    ========================================= */
+
     .escena {
         position: relative;
+
         width: 100vw;
         height: 100vh;
         height: 100svh;
+
         overflow: hidden;
         isolation: isolate;
 
@@ -44,58 +62,95 @@
             );
     }
 
-    /* ---------- CIELO ---------- */
+
+
+    /* =========================================
+       CIELO
+    ========================================= */
 
     .cielo {
         position: absolute;
-        inset: 0 0 52% 0;
+
+        inset:
+            0
+            0
+            52%
+            0;
+
         overflow: hidden;
+
         z-index: 0;
     }
 
     .sol {
         position: absolute;
+
         width: 68px;
         height: 68px;
-        border-radius: 50%;
+
         top: 7%;
         right: 10%;
 
-        background: radial-gradient(
-            circle,
-            rgba(255, 244, 186, 0.95) 0%,
-            rgba(255, 232, 151, 0.75) 42%,
-            rgba(255, 233, 163, 0.18) 70%,
-            transparent 100%
-        );
+        border-radius: 50%;
+
+        background:
+            radial-gradient(
+                circle,
+                rgba(255, 244, 186, .95) 0%,
+                rgba(255, 232, 151, .75) 42%,
+                rgba(255, 233, 163, .18) 70%,
+                transparent 100%
+            );
 
         filter: blur(1px);
+
         opacity: .9;
     }
 
     .sol::after {
         content: "";
+
         position: absolute;
+
         inset: -35px;
+
         border-radius: 50%;
-        background: radial-gradient(
-            circle,
-            rgba(255,255,210,.25),
-            transparent 70%
-        );
+
+        background:
+            radial-gradient(
+                circle,
+                rgba(255,255,210,.25),
+                transparent 70%
+            );
     }
+
+
+
+    /* =========================================
+       NUBES
+    ========================================= */
 
     .nube {
         position: absolute;
+
         border-radius: 999px;
-        background: rgba(255,255,255,.24);
+
+        background:
+            rgba(255,255,255,.24);
+
         filter: blur(8px);
-        animation: moverNube 45s linear infinite;
+
+        animation:
+            moverNube
+            45s
+            linear
+            infinite;
     }
 
     .nube1 {
         width: 160px;
         height: 30px;
+
         top: 16%;
         left: -30px;
     }
@@ -103,39 +158,55 @@
     .nube2 {
         width: 220px;
         height: 38px;
+
         top: 29%;
         left: 55%;
+
         opacity: .65;
+
         animation-duration: 62s;
     }
 
     .nube3 {
         width: 120px;
         height: 25px;
+
         top: 7%;
         left: 28%;
+
         opacity: .35;
+
         animation-duration: 55s;
     }
 
     @keyframes moverNube {
+
         0% {
-            transform: translateX(-40px);
+            transform:
+                translateX(-40px);
         }
 
         50% {
-            transform: translateX(50px);
+            transform:
+                translateX(50px);
         }
 
         100% {
-            transform: translateX(-40px);
+            transform:
+                translateX(-40px);
         }
+
     }
 
-    /* ---------- CAMPO ---------- */
+
+
+    /* =========================================
+       CAMPO
+    ========================================= */
 
     .campo {
         position: absolute;
+
         left: 0;
         right: 0;
         bottom: 0;
@@ -145,39 +216,51 @@
         background:
             linear-gradient(
                 to bottom,
-                rgba(142, 151, 91, .8) 0%,
+                rgba(142,151,91,.8) 0%,
                 #7c934d 15%,
                 #5e793d 46%,
                 #405f31 100%
             );
 
-        clip-path: polygon(
-            0 3%,
-            15% 1%,
-            33% 3.5%,
-            50% 0%,
-            68% 2.7%,
-            85% 1%,
-            100% 3%,
-            100% 100%,
-            0 100%
-        );
+        clip-path:
+            polygon(
+                0 3%,
+                15% 1%,
+                33% 3.5%,
+                50% 0%,
+                68% 2.7%,
+                85% 1%,
+                100% 3%,
+                100% 100%,
+                0 100%
+            );
 
         z-index: 2;
     }
 
     #campoCanvas {
         position: absolute;
+
         inset: 0;
+
         width: 100%;
         height: 100%;
+
         pointer-events: none;
     }
 
+
+
+    /* =========================================
+       NIEBLA DEL HORIZONTE
+    ========================================= */
+
     .niebla {
         position: absolute;
+
         left: 0;
         top: -3%;
+
         width: 100%;
         height: 38%;
 
@@ -186,47 +269,71 @@
         background:
             linear-gradient(
                 to bottom,
-                rgba(222, 231, 215, .55) 0%,
-                rgba(218, 227, 205, .28) 30%,
-                rgba(220, 229, 207, .08) 63%,
+                rgba(222,231,215,.55) 0%,
+                rgba(218,227,205,.28) 30%,
+                rgba(220,229,207,.08) 63%,
                 transparent 100%
             );
 
         filter: blur(2px);
+
         z-index: 3;
     }
 
     .bruma {
         position: absolute;
+
         left: -10%;
-        width: 120%;
         top: 4%;
+
+        width: 120%;
         height: 18%;
 
-        background: rgba(228, 232, 215, .12);
+        background:
+            rgba(228,232,215,.12);
+
         filter: blur(18px);
+
         pointer-events: none;
+
         z-index: 4;
     }
 
-    /* ---------- GIRASOL CSS ---------- */
+
+
+    /* =========================================
+       GIRASOL PRINCIPAL
+    ========================================= */
 
     .girasol {
         position: absolute;
+
         width: 65px;
         height: 155px;
-        transform-origin: bottom center;
+
+        transform-origin:
+            bottom center;
+
         pointer-events: none;
     }
 
+
+
+    /* =========================================
+       TALLO
+    ========================================= */
+
     .tallo {
         position: absolute;
+
         width: 7px;
         height: 105px;
+
         bottom: 0;
         left: 50%;
 
-        transform: translateX(-50%);
+        transform:
+            translateX(-50%);
 
         border-radius: 6px;
 
@@ -239,38 +346,94 @@
             );
     }
 
+
+
+    /* =========================================
+       HOJAS CORREGIDAS
+    ========================================= */
+
     .hoja {
         position: absolute;
 
         width: 40px;
-        height: 23px;
+        height: 24px;
+
+        bottom: 48px;
 
         background:
             linear-gradient(
                 135deg,
-                #709344,
-                #375f2c
+                #76994d 0%,
+                #4f7937 50%,
+                #315a29 100%
             );
 
-        border-radius: 100% 0 100% 0;
+        box-shadow:
+            inset -3px -2px 5px
+            rgba(25,65,25,.15);
 
-        bottom: 48px;
-        transform-origin: right center;
+        transform-origin:
+            0% 50%;
     }
+
+    .hoja::after {
+        content: "";
+
+        position: absolute;
+
+        left: 4px;
+        top: 50%;
+
+        width: 78%;
+        height: 1px;
+
+        background:
+            rgba(220,235,180,.28);
+
+        transform-origin:
+            left center;
+    }
+
+    /* Hoja izquierda */
 
     .hoja.izq {
-        left: 1px;
-        transform: rotate(15deg);
-    }
+        left: 50%;
 
-    .hoja.der {
-        right: 0;
-        bottom: 69px;
+        margin-left: -4px;
+
+        border-radius:
+            80% 10%
+            80% 10%;
 
         transform:
-            scaleX(-1)
-            rotate(17deg);
+            rotate(155deg)
+            skewX(-8deg);
     }
+
+    /* Hoja derecha */
+
+    .hoja.der {
+        left: 50%;
+        right: auto;
+
+        bottom: 69px;
+
+        margin-left: 2px;
+
+        border-radius:
+            10% 80%
+            10% 80%;
+
+        transform:
+            rotate(24deg)
+            skewX(8deg);
+    }
+
+
+
+    /* =========================================
+       FLOR
+    ========================================= */
 
     .flor {
         position: absolute;
@@ -281,14 +444,25 @@
         top: 0;
         left: 50%;
 
-        transform: translateX(-50%);
-        transform-origin: 50% 85%;
+        transform:
+            translateX(-50%);
+
+        transform-origin:
+            50% 85%;
 
         animation:
-            brisaFlor 4.6s
+            brisaFlor
+            4.6s
             ease-in-out
-            infinite alternate;
+            infinite
+            alternate;
     }
+
+
+
+    /* =========================================
+       PÉTALOS
+    ========================================= */
 
     .petalo {
         position: absolute;
@@ -302,7 +476,8 @@
         margin-left: -15.5px;
         margin-top: -40px;
 
-        transform-origin: 50% 40px;
+        transform-origin:
+            50% 40px;
 
         border-radius:
             70% 70%
@@ -317,17 +492,47 @@
             );
 
         box-shadow:
-            inset 0 -4px 8px rgba(130,75,0,.14);
+            inset 0 -4px 8px
+            rgba(130,75,0,.14);
     }
 
-    .petalo:nth-child(1) { transform: rotate(0deg); }
-    .petalo:nth-child(2) { transform: rotate(45deg); }
-    .petalo:nth-child(3) { transform: rotate(90deg); }
-    .petalo:nth-child(4) { transform: rotate(135deg); }
-    .petalo:nth-child(5) { transform: rotate(180deg); }
-    .petalo:nth-child(6) { transform: rotate(225deg); }
-    .petalo:nth-child(7) { transform: rotate(270deg); }
-    .petalo:nth-child(8) { transform: rotate(315deg); }
+    .petalo:nth-child(1) {
+        transform: rotate(0deg);
+    }
+
+    .petalo:nth-child(2) {
+        transform: rotate(45deg);
+    }
+
+    .petalo:nth-child(3) {
+        transform: rotate(90deg);
+    }
+
+    .petalo:nth-child(4) {
+        transform: rotate(135deg);
+    }
+
+    .petalo:nth-child(5) {
+        transform: rotate(180deg);
+    }
+
+    .petalo:nth-child(6) {
+        transform: rotate(225deg);
+    }
+
+    .petalo:nth-child(7) {
+        transform: rotate(270deg);
+    }
+
+    .petalo:nth-child(8) {
+        transform: rotate(315deg);
+    }
+
+
+
+    /* =========================================
+       CENTRO DEL GIRASOL
+    ========================================= */
 
     .centro {
         position: absolute;
@@ -338,7 +543,11 @@
         left: 50%;
         top: 50%;
 
-        transform: translate(-50%, -50%);
+        transform:
+            translate(
+                -50%,
+                -50%
+            );
 
         border-radius: 50%;
 
@@ -352,11 +561,21 @@
             );
 
         box-shadow:
-            inset 0 0 8px rgba(0,0,0,.4),
-            0 2px 4px rgba(0,0,0,.15);
+            inset 0 0 8px
+            rgba(0,0,0,.4),
+
+            0 2px 4px
+            rgba(0,0,0,.15);
     }
 
+
+
+    /* =========================================
+       MOVIMIENTO FLOR
+    ========================================= */
+
     @keyframes brisaFlor {
+
         from {
             transform:
                 translateX(-50%)
@@ -368,9 +587,14 @@
                 translateX(-50%)
                 rotate(2.5deg);
         }
+
     }
 
-    /* ---------- GIRASOL ACTUAL ---------- */
+
+
+    /* =========================================
+       GIRASOL DEL DÍA ACTUAL
+    ========================================= */
 
     .actual {
         width: 170px;
@@ -379,7 +603,8 @@
         left: 45%;
         bottom: 1%;
 
-        transform: translateX(-50%);
+        transform:
+            translateX(-50%);
 
         z-index: 20;
     }
@@ -392,11 +617,26 @@
     .actual .hoja {
         width: 73px;
         height: 42px;
-        bottom: 60px;
+
+        bottom: 63px;
+    }
+
+    .actual .hoja.izq {
+        margin-left: -7px;
+
+        transform:
+            rotate(158deg)
+            skewX(-7deg);
     }
 
     .actual .hoja.der {
         bottom: 108px;
+
+        margin-left: 4px;
+
+        transform:
+            rotate(22deg)
+            skewX(7deg);
     }
 
     .actual .flor {
@@ -411,7 +651,8 @@
         margin-left: -28px;
         margin-top: -68px;
 
-        transform-origin: 50% 68px;
+        transform-origin:
+            50% 68px;
     }
 
     .actual .centro {
@@ -428,39 +669,61 @@
             );
     }
 
+
+
+    /* =========================================
+       CONTADOR DEL DÍA
+    ========================================= */
+
     .actual .numero {
         position: absolute;
 
         left: 50%;
         top: -79px;
 
-        transform: translateX(-50%);
+        transform:
+            translateX(-50%);
 
         white-space: nowrap;
 
-        padding: 9px 15px;
+        padding:
+            9px
+            15px;
 
         border-radius: 18px;
 
-        background: rgba(255,255,255,.86);
+        background:
+            rgba(255,255,255,.88);
 
-        color: #41311d;
+        color:
+            #41311d;
+
         font-weight: 750;
         font-size: 14px;
 
         box-shadow:
-            0 5px 18px rgba(37,45,25,.15);
+            0 5px 18px
+            rgba(37,45,25,.15);
 
-        backdrop-filter: blur(7px);
+        backdrop-filter:
+            blur(7px);
     }
 
-    /* ---------- GIRASOL MAÑANA ---------- */
+
+
+    /* =========================================
+       GIRASOL DEL PRÓXIMO DÍA
+    ========================================= */
 
     .siguiente {
         width: 70px;
         height: 155px;
 
-        left: calc(45% + 101px);
+        left:
+            calc(
+                45% + 101px
+            );
+
         bottom: 1.5%;
 
         z-index: 19;
@@ -473,17 +736,29 @@
 
     .siguiente .hoja {
         width: 35px;
-        height: 19px;
-        bottom: 37px;
+        height: 20px;
+
+        bottom: 38px;
+    }
+
+    .siguiente .hoja.izq {
+        transform:
+            rotate(155deg)
+            skewX(-7deg);
     }
 
     .siguiente .hoja.der {
-        bottom: 59px;
+        bottom: 60px;
+
+        transform:
+            rotate(24deg)
+            skewX(7deg);
     }
 
     .siguiente .flor {
         width: 55px;
         height: 55px;
+
         top: 8px;
     }
 
@@ -494,7 +769,8 @@
         margin-left: -11.5px;
         margin-top: -29px;
 
-        transform-origin: 50% 29px;
+        transform-origin:
+            50% 29px;
     }
 
     .siguiente .centro {
@@ -502,63 +778,92 @@
         height: 28px;
     }
 
+
+
+    /* =========================================
+       FRASE
+    ========================================= */
+
     .frase {
         position: absolute;
 
-        width: min(225px, 61vw);
+        width:
+            min(
+                240px,
+                64vw
+            );
 
         bottom: 142px;
         left: 50%;
 
-        transform: translateX(-50%);
+        transform:
+            translateX(-50%);
 
-        padding: 10px 12px;
+        padding:
+            11px
+            14px;
 
         text-align: center;
 
-        background: rgba(255,255,255,.82);
+        background:
+            rgba(255,255,255,.86);
 
         border:
             1px solid
-            rgba(255,255,255,.64);
+            rgba(255,255,255,.65);
 
-        border-radius: 17px;
+        border-radius: 18px;
 
         box-shadow:
             0 6px 22px
             rgba(30,45,20,.16);
 
-        backdrop-filter: blur(8px);
+        backdrop-filter:
+            blur(9px);
 
-        color: #4f472d;
+        color:
+            #4f472d;
 
         pointer-events: auto;
     }
 
     .frase .dia {
+        margin-bottom: 4px;
+
         font-size: 11px;
         font-weight: 800;
-        opacity: .62;
-        margin-bottom: 3px;
+
+        color:
+            #6b7047;
+
+        opacity: .8;
     }
 
     #textoFrase {
         min-height: 20px;
 
-        font-size: 13px;
-        line-height: 1.35;
-
         outline: none;
 
         cursor: text;
+
+        font-size: 13px;
+        line-height: 1.4;
+
+        font-weight: 500;
     }
 
     #textoFrase:empty::before {
-        content: "Tocá acá para escribir algo 💛";
+        content:
+            "Tocá acá para escribir algo 💛";
+
         opacity: .5;
     }
 
-    /* ---------- SOMBRAS ---------- */
+
+
+    /* =========================================
+       SOMBRA
+    ========================================= */
 
     .sombra-actual {
         position: absolute;
@@ -578,22 +883,33 @@
         background:
             rgba(21,40,17,.24);
 
-        filter: blur(12px);
+        filter:
+            blur(12px);
 
         z-index: 15;
     }
 
-    /* ---------- TITULO ---------- */
+
+
+    /* =========================================
+       TÍTULO
+    ========================================= */
 
     .titulo {
         position: absolute;
 
         left: 18px;
-        top: max(18px, env(safe-area-inset-top));
+
+        top:
+            max(
+                18px,
+                env(safe-area-inset-top)
+            );
 
         z-index: 8;
 
-        color: rgba(42,53,43,.88);
+        color:
+            rgba(42,53,43,.88);
 
         text-shadow:
             0 1px 8px
@@ -604,28 +920,47 @@
 
     .titulo h1 {
         margin: 0;
-        font-size: clamp(18px, 5vw, 25px);
+
+        font-size:
+            clamp(
+                18px,
+                5vw,
+                25px
+            );
+
         letter-spacing: -.7px;
+
         font-weight: 750;
     }
 
     .titulo p {
-        margin: 2px 0 0;
+        margin:
+            2px 0 0;
+
         font-size: 11px;
+
         opacity: .65;
     }
 
-    /* ---------- MOBILE ---------- */
 
-    @media (max-width: 390px) {
+
+    /* =========================================
+       CELULARES CHICOS
+    ========================================= */
+
+    @media (
+        max-width: 390px
+    ) {
 
         .actual {
             left: 42%;
+
             transform:
                 translateX(-50%)
                 scale(.88);
 
-            transform-origin: bottom center;
+            transform-origin:
+                bottom center;
         }
 
         .sombra-actual {
@@ -633,35 +968,57 @@
         }
 
         .siguiente {
-            left: calc(42% + 87px);
-            transform: scale(.9);
-            transform-origin: bottom center;
+            left:
+                calc(
+                    42% + 87px
+                );
+
+            transform:
+                scale(.9);
+
+            transform-origin:
+                bottom center;
         }
 
         .frase {
-            width: 190px;
-            left: 35%;
+            width: 195px;
+
+            left: 30%;
         }
+
     }
 
-    @media (max-height: 680px) {
+
+
+    /* =========================================
+       PANTALLAS BAJAS
+    ========================================= */
+
+    @media (
+        max-height: 680px
+    ) {
 
         .actual {
             transform:
                 translateX(-50%)
                 scale(.8);
 
-            transform-origin: bottom center;
+            transform-origin:
+                bottom center;
         }
 
         .siguiente {
-            transform: scale(.82);
-            transform-origin: bottom center;
+            transform:
+                scale(.82);
+
+            transform-origin:
+                bottom center;
         }
 
         .titulo p {
             display: none;
         }
+
     }
 
 </style>
@@ -671,83 +1028,122 @@
 
 <div class="escena">
 
+    <!-- CIELO -->
     <div class="cielo">
+
         <div class="sol"></div>
+
         <div class="nube nube1"></div>
         <div class="nube nube2"></div>
         <div class="nube nube3"></div>
+
     </div>
 
+
+    <!-- TEXTO SUPERIOR -->
     <div class="titulo">
-        <h1>Nuestro campo 🌻</h1>
+
+        <h1>
+            Nuestro campo 🌻
+        </h1>
+
         <p id="subtitulo"></p>
+
     </div>
 
+
+    <!-- CAMPO -->
     <div class="campo">
 
         <canvas id="campoCanvas"></canvas>
 
         <div class="niebla"></div>
+
         <div class="bruma"></div>
 
         <div class="sombra-actual"></div>
 
-        <!-- GIRASOL DEL DÍA ACTUAL -->
+
+        <!-- ==================================
+             GIRASOL DEL DÍA ACTUAL
+        =================================== -->
+
         <div class="girasol actual">
 
-            <div class="numero" id="numeroDia">
+            <div
+                class="numero"
+                id="numeroDia"
+            >
                 Día
             </div>
 
             <div class="tallo"></div>
 
             <div class="hoja izq"></div>
+
             <div class="hoja der"></div>
 
             <div class="flor">
+
                 <div class="petalo"></div>
                 <div class="petalo"></div>
                 <div class="petalo"></div>
                 <div class="petalo"></div>
+
                 <div class="petalo"></div>
                 <div class="petalo"></div>
                 <div class="petalo"></div>
                 <div class="petalo"></div>
 
                 <div class="centro"></div>
+
             </div>
 
         </div>
 
-        <!-- GIRASOL DEL DÍA SIGUIENTE -->
+
+
+        <!-- ==================================
+             GIRASOL DEL PRÓXIMO DÍA
+        =================================== -->
+
         <div class="girasol siguiente">
 
             <div class="frase">
-                <div class="dia" id="diaSiguiente"></div>
+
+                <div
+                    class="dia"
+                    id="diaSiguiente"
+                ></div>
 
                 <div
                     id="textoFrase"
                     contenteditable="true"
                     spellcheck="false"
                 ></div>
+
             </div>
 
             <div class="tallo"></div>
 
             <div class="hoja izq"></div>
+
             <div class="hoja der"></div>
 
             <div class="flor">
+
                 <div class="petalo"></div>
                 <div class="petalo"></div>
                 <div class="petalo"></div>
                 <div class="petalo"></div>
+
                 <div class="petalo"></div>
                 <div class="petalo"></div>
                 <div class="petalo"></div>
                 <div class="petalo"></div>
 
                 <div class="centro"></div>
+
             </div>
 
         </div>
@@ -756,606 +1152,766 @@
 
 </div>
 
+
+
 <script>
 
-    /* =====================================================
-       DÍAS
-    ===================================================== */
+/* ==========================================
+   FECHA INICIAL
+========================================== */
 
-    const fechaInicio = new Date(2024, 7, 4);
+const fechaInicio =
+    new Date(
+        2024,
+        7,
+        4
+    );
 
-    const hoy = new Date();
+const hoy =
+    new Date();
 
-    const inicioDia = new Date(
+const inicioDia =
+    new Date(
         fechaInicio.getFullYear(),
         fechaInicio.getMonth(),
         fechaInicio.getDate()
     );
 
-    const hoyDia = new Date(
+const hoyDia =
+    new Date(
         hoy.getFullYear(),
         hoy.getMonth(),
         hoy.getDate()
     );
 
-    const MS_DIA = 1000 * 60 * 60 * 24;
+const MS_DIA =
+    1000 *
+    60 *
+    60 *
+    24;
 
-    const dias = Math.floor(
-        (hoyDia - inicioDia) / MS_DIA
+const dias =
+    Math.floor(
+        (
+            hoyDia -
+            inicioDia
+        ) /
+        MS_DIA
     );
 
-    document.getElementById("numeroDia").textContent =
-        `🌻 Día ${dias}`;
-
-    document.getElementById("diaSiguiente").textContent =
-        `🌱 Día ${dias + 1}`;
-
-    document.getElementById("subtitulo").textContent =
-        `Desde el 4 de agosto de 2024 · ${dias} días`;
 
 
+/* ==========================================
+   TEXTOS
+========================================== */
 
-    /* =====================================================
-       FRASE EDITABLE + GUARDADO
-    ===================================================== */
+document
+    .getElementById(
+        "numeroDia"
+    )
+    .textContent =
+    `🌻 Día ${dias}`;
 
-    const textoFrase =
-        document.getElementById("textoFrase");
 
-    const CLAVE_FRASE =
-        `frase-dia-${dias + 1}`;
+document
+    .getElementById(
+        "diaSiguiente"
+    )
+    .textContent =
+    `🌱 Nuestro próximo día · ${dias + 1}`;
 
-    textoFrase.textContent =
-        localStorage.getItem(CLAVE_FRASE) || "";
 
-    textoFrase.addEventListener("input", () => {
+document
+    .getElementById(
+        "subtitulo"
+    )
+    .textContent =
+    `Desde el 4 de agosto de 2024 · ${dias} días`;
 
-        localStorage.setItem(
-            CLAVE_FRASE,
-            textoFrase.textContent.trim()
+
+
+/* ==========================================
+   FRASE
+========================================== */
+
+const textoFrase =
+    document
+        .getElementById(
+            "textoFrase"
         );
 
-    });
+const CLAVE_FRASE =
+    `frase-dia-${dias + 1}`;
 
 
-
-    /* =====================================================
-       CANVAS
-    ===================================================== */
-
-    const canvas =
-        document.getElementById("campoCanvas");
-
-    const ctx =
-        canvas.getContext("2d");
-
-    let flores = [];
+const FRASE_DEFECTO =
+    "Todavía nos quedan muchos días por florecer juntos. 🌻💛";
 
 
+textoFrase.textContent =
+    localStorage
+        .getItem(
+            CLAVE_FRASE
+        )
+    ||
+    FRASE_DEFECTO;
 
-    /* =====================================================
-       RANDOM DETERMINISTA
-       Así el campo no cambia cada vez que recargás.
-    ===================================================== */
 
-    function randomSemilla(seed) {
+/*
+    Guardamos cualquier cambio
+    que hagas tocando la frase.
+*/
 
-        let value = seed % 2147483647;
+textoFrase
+    .addEventListener(
+        "input",
+        () => {
 
-        if (value <= 0) {
-            value += 2147483646;
+            localStorage
+                .setItem(
+                    CLAVE_FRASE,
+                    textoFrase
+                        .textContent
+                        .trim()
+                );
+
         }
+    );
 
-        return function () {
 
-            value =
-                value * 16807 %
-                2147483647;
 
-            return (
-                value - 1
-            ) / 2147483646;
+/* ==========================================
+   CANVAS
+========================================== */
 
-        };
+const canvas =
+    document
+        .getElementById(
+            "campoCanvas"
+        );
+
+const ctx =
+    canvas
+        .getContext(
+            "2d"
+        );
+
+let flores = [];
+
+
+
+/* ==========================================
+   RANDOM DETERMINISTA
+
+   Mantiene el mismo campo al recargar.
+========================================== */
+
+function randomSemilla(seed) {
+
+    let value =
+        seed %
+        2147483647;
+
+    if (
+        value <= 0
+    ) {
+
+        value +=
+            2147483646;
 
     }
 
+    return function() {
+
+        value =
+            value *
+            16807 %
+            2147483647;
+
+        return (
+            value - 1
+        ) /
+        2147483646;
+
+    };
+
+}
 
 
-    /* =====================================================
-       CREAR POSICIONES
-    ===================================================== */
 
-    function generarCampo(
-        width,
-        height,
+/* ==========================================
+   GENERAR CAMPO DE GIRASOLES
+========================================== */
+
+function generarCampo(
+    width,
+    height,
+    cantidad
+) {
+
+    const random =
+        randomSemilla(
+            4082024
+        );
+
+    const elementos =
+        [];
+
+    let intentos =
+        0;
+
+
+    while (
+        elementos.length <
         cantidad
+        &&
+        intentos <
+        cantidad * 40
     ) {
 
-        const random =
-            randomSemilla(4082024);
+        intentos++;
 
-        const elementos = [];
-
-        let intentos = 0;
 
         /*
-            Usamos más candidatos que flores
-            para poder descartar algunas que
-            quedan demasiado juntas.
+            Profundidad:
+            0 = horizonte
+            1 = cerca
         */
 
-        while (
-            elementos.length < cantidad &&
-            intentos < cantidad * 35
+        const profundidad =
+            Math.pow(
+                random(),
+                1.65
+            );
+
+
+        const y =
+            height *
+            (
+                .05 +
+                profundidad *
+                .92
+            );
+
+
+        /*
+            Abrimos el campo a medida
+            que se acerca a nosotros.
+        */
+
+        const apertura =
+            .69 +
+            profundidad *
+            .40;
+
+
+        const centro =
+            width /
+            2;
+
+
+        const xNormal =
+            random() *
+            2 -
+            1;
+
+
+        let x =
+            centro +
+            xNormal *
+            (
+                width /
+                2
+            ) *
+            apertura;
+
+
+        x +=
+            (
+                random() -
+                .5
+            ) *
+            18;
+
+
+        /*
+            Tamaño.
+        */
+
+        const escala =
+            .15 +
+            profundidad *
+            .83;
+
+
+        /*
+            Separación.
+        */
+
+        const distanciaMin =
+            5 +
+            profundidad *
+            18;
+
+
+        let demasiadoCerca =
+            false;
+
+
+        for (
+            let i =
+                elementos.length - 1;
+
+            i >= 0;
+
+            i--
         ) {
 
-            intentos++;
+            const otra =
+                elementos[i];
 
 
-            /*
-                Distribución en profundidad.
-
-                Pow < 1 concentra más flores
-                en la zona lejana del campo.
-            */
-
-            let profundidad =
-                Math.pow(
-                    random(),
-                    1.65
-                );
-
-
-            /*
-                La parte superior es el horizonte.
-
-                profundidad 0 = lejos
-                profundidad 1 = cerca
-            */
-
-            const y =
-                height * (
-                    0.05 +
-                    profundidad * 0.92
-                );
-
-
-            /*
-                Abrimos un poco la perspectiva.
-
-                Las flores lejanas quedan más
-                concentradas hacia el centro,
-                mientras las cercanas ocupan
-                casi todo el ancho.
-            */
-
-            const apertura =
-                0.68 +
-                profundidad * 0.42;
-
-            const centro =
-                width / 2;
-
-            const xNormal =
-                random() * 2 - 1;
-
-            let x =
-                centro +
-                xNormal *
-                (width / 2) *
-                apertura;
-
-            x +=
-                (random() - .5) *
-                18;
-
-
-            /*
-                Tamaño según profundidad.
-            */
-
-            const escala =
-                0.15 +
-                profundidad * 0.83;
-
-
-            /*
-                Separación dinámica.
-
-                Adelante: más espacio.
-                Atrás: pueden estar más cerca.
-            */
-
-            const distanciaMin =
-                5 +
-                profundidad * 18;
-
-
-            let demasiadoCerca =
-                false;
-
-            for (
-                let i = elementos.length - 1;
-                i >= 0;
-                i--
+            if (
+                Math.abs(
+                    otra.y -
+                    y
+                ) >
+                distanciaMin *
+                1.8
             ) {
 
-                const otra =
-                    elementos[i];
-
-                /*
-                    Sólo comprobamos flores
-                    con profundidad parecida.
-                */
-
-                if (
-                    Math.abs(otra.y - y) >
-                    distanciaMin * 1.8
-                ) {
-                    continue;
-                }
-
-                const dx =
-                    otra.x - x;
-
-                const dy =
-                    otra.y - y;
-
-                const distancia =
-                    Math.sqrt(
-                        dx * dx +
-                        dy * dy
-                    );
-
-                const minimo =
-                    distanciaMin *
-                    Math.max(
-                        escala,
-                        otra.escala
-                    );
-
-                if (
-                    distancia <
-                    minimo * 3
-                ) {
-
-                    demasiadoCerca = true;
-                    break;
-
-                }
-
-            }
-
-            if (demasiadoCerca) {
                 continue;
+
             }
 
 
-            elementos.push({
+            const dx =
+                otra.x -
+                x;
 
-                x,
-                y,
-                escala,
 
-                profundidad,
+            const dy =
+                otra.y -
+                y;
 
-                rotacion:
-                    (random() - .5) *
-                    .20,
 
-                variacion:
-                    random(),
+            const distancia =
+                Math.sqrt(
+                    dx * dx +
+                    dy * dy
+                );
 
-                inclinacion:
-                    (random() - .5) *
-                    7
 
-            });
+            const minimo =
+                distanciaMin *
+                Math.max(
+                    escala,
+                    otra.escala
+                );
+
+
+            if (
+                distancia <
+                minimo *
+                3
+            ) {
+
+                demasiadoCerca =
+                    true;
+
+                break;
+
+            }
 
         }
 
 
-        /*
-            Orden de atrás hacia adelante.
-        */
+        if (
+            demasiadoCerca
+        ) {
 
-        elementos.sort(
-            (a, b) =>
-                a.profundidad -
-                b.profundidad
-        );
+            continue;
 
-        return elementos;
+        }
+
+
+        elementos.push({
+
+            x,
+
+            y,
+
+            escala,
+
+            profundidad,
+
+            rotacion:
+                (
+                    random() -
+                    .5
+                ) *
+                .20,
+
+            variacion:
+                random(),
+
+            inclinacion:
+                (
+                    random() -
+                    .5
+                ) *
+                7
+
+        });
 
     }
 
 
+    /*
+        Ordenamos de atrás
+        hacia adelante.
+    */
 
-    /* =====================================================
-       DIBUJAR GIRASOL
-    ===================================================== */
+    elementos.sort(
+        (
+            a,
+            b
+        ) =>
+            a.profundidad -
+            b.profundidad
+    );
 
-    function dibujarGirasol(
-        flor,
-        tiempo
+
+    return elementos;
+
+}
+
+
+
+/* ==========================================
+   GIRASOL CANVAS
+========================================== */
+
+function dibujarGirasol(
+    flor,
+    tiempo
+) {
+
+    const {
+        x,
+        y,
+        escala,
+        profundidad,
+        rotacion,
+        variacion,
+        inclinacion
+    } =
+        flor;
+
+
+    ctx.save();
+
+
+    ctx.translate(
+        x,
+        y
+    );
+
+
+    ctx.scale(
+        escala,
+        escala
+    );
+
+
+    /*
+        Movimiento suave.
+    */
+
+    const viento =
+        Math.sin(
+            tiempo *
+            .0012 +
+            variacion *
+            8
+        ) *
+        (
+            .014 +
+            profundidad *
+            .015
+        );
+
+
+    ctx.rotate(
+        rotacion +
+        viento
+    );
+
+
+    /*
+        Flores lejanas menos contrastadas.
+    */
+
+    ctx.globalAlpha =
+        .38 +
+        profundidad *
+        .62;
+
+
+
+    /* ======================================
+       TALLO
+    ====================================== */
+
+    const altoTallo =
+        49 +
+        profundidad *
+        28;
+
+
+    ctx.beginPath();
+
+
+    ctx.moveTo(
+        0,
+        2
+    );
+
+
+    ctx.quadraticCurveTo(
+        inclinacion,
+        altoTallo /
+        2,
+        0,
+        altoTallo
+    );
+
+
+    ctx.lineWidth =
+        3.2 +
+        profundidad *
+        1.7;
+
+
+    ctx.lineCap =
+        "round";
+
+
+    ctx.strokeStyle =
+        profundidad <
+        .25
+            ?
+            "#66804b"
+            :
+            "#3d682e";
+
+
+    ctx.stroke();
+
+
+
+    /* ======================================
+       HOJAS CANVAS
+    ====================================== */
+
+    function hoja(
+        lado,
+        altura,
+        tamaño
     ) {
 
-        const {
-            x,
-            y,
-            escala,
-            profundidad,
-            rotacion,
-            variacion,
-            inclinacion
-        } = flor;
+        ctx.save();
+
+
+        ctx.translate(
+            0,
+            altura
+        );
+
+
+        ctx.scale(
+            lado,
+            1
+        );
+
+
+        ctx.rotate(
+            -.15
+        );
+
+
+        ctx.beginPath();
+
+
+        ctx.moveTo(
+            0,
+            0
+        );
+
+
+        ctx.bezierCurveTo(
+            tamaño *
+            .4,
+
+            -tamaño *
+            .55,
+
+            tamaño,
+
+            -tamaño *
+            .5,
+
+            tamaño,
+
+            0
+        );
+
+
+        ctx.bezierCurveTo(
+            tamaño *
+            .72,
+
+            tamaño *
+            .42,
+
+            tamaño *
+            .22,
+
+            tamaño *
+            .32,
+
+            0,
+
+            0
+        );
+
+
+        ctx.fillStyle =
+            profundidad <
+            .25
+                ?
+                "#758952"
+                :
+                "#4e7533";
+
+
+        ctx.fill();
+
+
+        ctx.restore();
+
+    }
+
+
+    hoja(
+        -1,
+        altoTallo *
+        .61,
+        17
+    );
+
+
+    hoja(
+        1,
+        altoTallo *
+        .43,
+        15
+    );
+
+
+
+    /* ======================================
+       FLOR
+    ====================================== */
+
+    ctx.translate(
+        0,
+        -3
+    );
+
+
+    const tamañoFlor =
+        19 +
+        profundidad *
+        16;
+
+
+
+    /* ======================================
+       PÉTALOS
+    ====================================== */
+
+    for (
+        let i = 0;
+        i < 10;
+        i++
+    ) {
+
+        const angulo =
+            (
+                Math.PI *
+                2 /
+                10
+            ) *
+            i;
 
 
         ctx.save();
 
-        ctx.translate(x, y);
-
-        ctx.scale(
-            escala,
-            escala
-        );
-
-
-        /*
-            Oscilación muy suave.
-        */
-
-        const viento =
-            Math.sin(
-                tiempo * 0.0012 +
-                variacion * 8
-            ) * (
-                .014 +
-                profundidad * .015
-            );
 
         ctx.rotate(
-            rotacion +
-            viento
+            angulo
         );
 
-
-        /*
-            FLORES MUY LEJANAS:
-            menos contraste por atmósfera.
-        */
-
-        ctx.globalAlpha =
-            0.38 +
-            profundidad * .62;
-
-
-
-        /* -----------------------------
-           TALLO
-        ----------------------------- */
-
-        const altoTallo =
-            49 +
-            profundidad * 28;
-
-        ctx.beginPath();
-
-        ctx.moveTo(
-            0,
-            2
-        );
-
-        ctx.quadraticCurveTo(
-            inclinacion,
-            altoTallo / 2,
-            0,
-            altoTallo
-        );
-
-        ctx.lineWidth =
-            3.2 +
-            profundidad * 1.7;
-
-        ctx.lineCap = "round";
-
-        ctx.strokeStyle =
-            profundidad < .25
-                ? "#66804b"
-                : "#3d682e";
-
-        ctx.stroke();
-
-
-
-        /* -----------------------------
-           HOJAS
-        ----------------------------- */
-
-        function hoja(
-            lado,
-            altura,
-            tamaño
-        ) {
-
-            ctx.save();
-
-            ctx.translate(
-                0,
-                altura
-            );
-
-            ctx.scale(
-                lado,
-                1
-            );
-
-            ctx.rotate(-0.15);
-
-            ctx.beginPath();
-
-            ctx.moveTo(
-                0,
-                0
-            );
-
-            ctx.bezierCurveTo(
-                tamaño * .4,
-                -tamaño * .55,
-                tamaño,
-                -tamaño * .5,
-                tamaño,
-                0
-            );
-
-            ctx.bezierCurveTo(
-                tamaño * .72,
-                tamaño * .42,
-                tamaño * .22,
-                tamaño * .32,
-                0,
-                0
-            );
-
-            ctx.fillStyle =
-                profundidad < .25
-                    ? "#758952"
-                    : "#4e7533";
-
-            ctx.fill();
-
-            ctx.restore();
-
-        }
-
-
-        hoja(
-            -1,
-            altoTallo * .61,
-            17
-        );
-
-        hoja(
-            1,
-            altoTallo * .43,
-            15
-        );
-
-
-
-        /* -----------------------------
-           FLOR
-        ----------------------------- */
 
         ctx.translate(
             0,
-            -3
+            -tamañoFlor *
+            .58
         );
 
-
-        const tamañoFlor =
-            19 +
-            profundidad * 16;
-
-
-        /*
-            PÉTALOS
-        */
-
-        for (
-            let i = 0;
-            i < 10;
-            i++
-        ) {
-
-            const angulo =
-                (
-                    Math.PI * 2 /
-                    10
-                ) * i;
-
-            ctx.save();
-
-            ctx.rotate(angulo);
-
-            ctx.translate(
-                0,
-                -tamañoFlor * .58
-            );
-
-            ctx.beginPath();
-
-            ctx.ellipse(
-                0,
-                0,
-                tamañoFlor * .23,
-                tamañoFlor * .54,
-                0,
-                0,
-                Math.PI * 2
-            );
-
-            ctx.fillStyle =
-                profundidad < .22
-                    ? "#d8b843"
-                    : (
-                        variacion > .45
-                            ? "#f2c52b"
-                            : "#eab522"
-                    );
-
-            ctx.fill();
-
-            ctx.restore();
-
-        }
-
-
-        /*
-            CENTRO
-        */
-
-        const radio =
-            tamañoFlor * .34;
-
-        const degradado =
-            ctx.createRadialGradient(
-                -radio * .25,
-                -radio * .25,
-                1,
-                0,
-                0,
-                radio
-            );
-
-        degradado.addColorStop(
-            0,
-            "#75502c"
-        );
-
-        degradado.addColorStop(
-            .55,
-            "#4d321c"
-        );
-
-        degradado.addColorStop(
-            1,
-            "#281a10"
-        );
 
         ctx.beginPath();
 
-        ctx.arc(
+
+        ctx.ellipse(
             0,
             0,
-            radio,
+
+            tamañoFlor *
+            .23,
+
+            tamañoFlor *
+            .54,
+
             0,
-            Math.PI * 2
+
+            0,
+
+            Math.PI *
+            2
         );
 
+
         ctx.fillStyle =
-            degradado;
+            profundidad <
+            .22
+                ?
+                "#d8b843"
+                :
+                (
+                    variacion >
+                    .45
+
+                    ?
+
+                    "#f2c52b"
+
+                    :
+
+                    "#eab522"
+                );
+
 
         ctx.fill();
 
@@ -1366,238 +1922,405 @@
 
 
 
-    /* =====================================================
-       PASTO DELANTERO
-    ===================================================== */
+    /* ======================================
+       CENTRO
+    ====================================== */
 
-    function dibujarPasto(
-        width,
-        height
-    ) {
-
-        const random =
-            randomSemilla(197);
-
-        ctx.save();
-
-        ctx.globalAlpha =
-            .32;
-
-        for (
-            let i = 0;
-            i < 90;
-            i++
-        ) {
-
-            const x =
-                random() * width;
-
-            const y =
-                height * (
-                    .75 +
-                    random() * .25
-                );
-
-            const alto =
-                7 +
-                random() * 20;
-
-            ctx.beginPath();
-
-            ctx.moveTo(
-                x,
-                y
-            );
-
-            ctx.quadraticCurveTo(
-                x +
-                (random() - .5) * 8,
-                y - alto / 2,
-                x +
-                (random() - .5) * 10,
-                y - alto
-            );
-
-            ctx.lineWidth =
-                .8 +
-                random() * 1.6;
-
-            ctx.strokeStyle =
-                "#294b29";
-
-            ctx.stroke();
-
-        }
-
-        ctx.restore();
-
-    }
+    const radio =
+        tamañoFlor *
+        .34;
 
 
+    const degradado =
+        ctx.createRadialGradient(
 
-    /* =====================================================
-       RESIZE
-    ===================================================== */
+            -radio *
+            .25,
 
-    function prepararCanvas() {
+            -radio *
+            .25,
 
-        const rect =
-            canvas.getBoundingClientRect();
+            1,
 
-        const dpr =
-            Math.min(
-                window.devicePixelRatio || 1,
-                2
-            );
-
-        canvas.width =
-            rect.width * dpr;
-
-        canvas.height =
-            rect.height * dpr;
-
-        ctx.setTransform(
-            dpr,
             0,
+
             0,
-            dpr,
-            0,
-            0
+
+            radio
+
         );
 
 
-        /*
-            Un girasol cada dos días.
-        */
+    degradado
+        .addColorStop(
+            0,
+            "#75502c"
+        );
 
-        const cantidad =
-            Math.max(
-                1,
-                Math.floor(dias / 2)
+
+    degradado
+        .addColorStop(
+            .55,
+            "#4d321c"
+        );
+
+
+    degradado
+        .addColorStop(
+            1,
+            "#281a10"
+        );
+
+
+    ctx.beginPath();
+
+
+    ctx.arc(
+        0,
+        0,
+        radio,
+        0,
+        Math.PI *
+        2
+    );
+
+
+    ctx.fillStyle =
+        degradado;
+
+
+    ctx.fill();
+
+
+    ctx.restore();
+
+}
+
+
+
+/* ==========================================
+   PASTO DELANTERO
+========================================== */
+
+function dibujarPasto(
+    width,
+    height
+) {
+
+    const random =
+        randomSemilla(
+            197
+        );
+
+
+    ctx.save();
+
+
+    ctx.globalAlpha =
+        .32;
+
+
+    for (
+        let i = 0;
+        i < 90;
+        i++
+    ) {
+
+        const x =
+            random() *
+            width;
+
+
+        const y =
+            height *
+            (
+                .75 +
+                random() *
+                .25
             );
 
 
-        flores =
-            generarCampo(
-                rect.width,
-                rect.height,
-                cantidad
-            );
+        const alto =
+            7 +
+            random() *
+            20;
+
+
+        ctx.beginPath();
+
+
+        ctx.moveTo(
+            x,
+            y
+        );
+
+
+        ctx.quadraticCurveTo(
+
+            x +
+            (
+                random() -
+                .5
+            ) *
+            8,
+
+            y -
+            alto /
+            2,
+
+            x +
+            (
+                random() -
+                .5
+            ) *
+            10,
+
+            y -
+            alto
+
+        );
+
+
+        ctx.lineWidth =
+            .8 +
+            random() *
+            1.6;
+
+
+        ctx.strokeStyle =
+            "#294b29";
+
+
+        ctx.stroke();
 
     }
 
 
+    ctx.restore();
 
-    /* =====================================================
-       ANIMACIÓN
-    ===================================================== */
-
-    let ultimoFrame = 0;
-
-    function animar(tiempo) {
-
-        /*
-            Limitamos aproximadamente a 30 FPS.
-            En celular reduce muchísimo el consumo.
-        */
-
-        if (
-            tiempo -
-            ultimoFrame <
-            33
-        ) {
-
-            requestAnimationFrame(animar);
-            return;
-
-        }
-
-        ultimoFrame =
-            tiempo;
+}
 
 
-        const rect =
-            canvas.getBoundingClientRect();
 
-        ctx.clearRect(
-            0,
-            0,
+/* ==========================================
+   PREPARAR CANVAS
+========================================== */
+
+function prepararCanvas() {
+
+    const rect =
+        canvas
+            .getBoundingClientRect();
+
+
+    const dpr =
+        Math.min(
+            window.devicePixelRatio ||
+            1,
+
+            2
+        );
+
+
+    canvas.width =
+        rect.width *
+        dpr;
+
+
+    canvas.height =
+        rect.height *
+        dpr;
+
+
+    ctx.setTransform(
+        dpr,
+        0,
+        0,
+        dpr,
+        0,
+        0
+    );
+
+
+    /*
+        Un girasol cada dos días.
+    */
+
+    const cantidad =
+        Math.max(
+            1,
+            Math.floor(
+                dias /
+                2
+            )
+        );
+
+
+    flores =
+        generarCampo(
             rect.width,
+            rect.height,
+            cantidad
+        );
+
+}
+
+
+
+/* ==========================================
+   ANIMACIÓN
+========================================== */
+
+let ultimoFrame =
+    0;
+
+
+function animar(
+    tiempo
+) {
+
+    /*
+        Aproximadamente 30 FPS.
+        Mejor para celulares.
+    */
+
+    if (
+        tiempo -
+        ultimoFrame <
+        33
+    ) {
+
+        requestAnimationFrame(
+            animar
+        );
+
+        return;
+
+    }
+
+
+    ultimoFrame =
+        tiempo;
+
+
+    const rect =
+        canvas
+            .getBoundingClientRect();
+
+
+    ctx.clearRect(
+        0,
+        0,
+        rect.width,
+        rect.height
+    );
+
+
+
+    /* ======================================
+       LUZ DEL HORIZONTE
+    ====================================== */
+
+    const brillo =
+        ctx.createLinearGradient(
+            0,
+            0,
+            0,
             rect.height
         );
 
 
-        /*
-            Base del horizonte.
-        */
-
-        const brillo =
-            ctx.createLinearGradient(
-                0,
-                0,
-                0,
-                rect.height
-            );
-
-        brillo.addColorStop(
+    brillo
+        .addColorStop(
             0,
             "rgba(225,228,188,.12)"
         );
 
-        brillo.addColorStop(
+
+    brillo
+        .addColorStop(
             .4,
             "rgba(255,255,255,0)"
         );
 
-        ctx.fillStyle =
-            brillo;
 
-        ctx.fillRect(
-            0,
-            0,
-            rect.width,
-            rect.height
+    ctx.fillStyle =
+        brillo;
+
+
+    ctx.fillRect(
+        0,
+        0,
+        rect.width,
+        rect.height
+    );
+
+
+
+    /* ======================================
+       GIRASOLES
+    ====================================== */
+
+    for (
+        const flor
+        of flores
+    ) {
+
+        dibujarGirasol(
+            flor,
+            tiempo
         );
-
-
-        for (
-            const flor of flores
-        ) {
-
-            dibujarGirasol(
-                flor,
-                tiempo
-            );
-
-        }
-
-
-        dibujarPasto(
-            rect.width,
-            rect.height
-        );
-
-
-        requestAnimationFrame(animar);
 
     }
 
 
 
-    prepararCanvas();
+    /* ======================================
+       PASTO
+    ====================================== */
 
-    requestAnimationFrame(animar);
+    dibujarPasto(
+        rect.width,
+        rect.height
+    );
 
 
-    let resizeTimer;
+    requestAnimationFrame(
+        animar
+    );
 
-    window.addEventListener(
+}
+
+
+
+/* ==========================================
+   INICIAR
+========================================== */
+
+prepararCanvas();
+
+requestAnimationFrame(
+    animar
+);
+
+
+
+/* ==========================================
+   REDIMENSIONAR
+========================================== */
+
+let resizeTimer;
+
+
+window
+    .addEventListener(
         "resize",
         () => {
 
             clearTimeout(
                 resizeTimer
             );
+
 
             resizeTimer =
                 setTimeout(
